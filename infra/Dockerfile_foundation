@@ -2,7 +2,7 @@ FROM ubuntu:20.04
 ARG DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /tmp
-ADD entrypoint.sh /usr/bin/entrypoint.sh
+ADD ./infra/entrypoint.sh /usr/bin/entrypoint.sh
 RUN chmod +x /usr/bin/entrypoint.sh
 
 RUN apt-get update \
@@ -91,5 +91,5 @@ RUN /opt/openresty/luajit/bin/luarocks install lustache \
 #
 # Clojure
 #
-ADD project.clj
+ADD ./infra/project.clj project.clj
 RUN lein deps && rm project.clj
