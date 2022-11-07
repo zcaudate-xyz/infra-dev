@@ -2,8 +2,6 @@ FROM ubuntu:20.04
 ARG DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /tmp
-ADD ./infra/entrypoint.sh /usr/bin/entrypoint.sh
-RUN chmod +x /usr/bin/entrypoint.sh
 
 RUN apt-get update \
   && apt-get install \
@@ -14,6 +12,7 @@ RUN apt-get update \
        x11vnc xvfb \
        docker.io \
        openjdk-11-jdk openjfx leiningen \
+       r-base tcc\
        redis -y
 RUN curl -s https://deb.nodesource.com/setup_16.x | sh
 RUN apt-get update && apt-get install postgresql-12 postgresql-client-12 nodejs -y
@@ -71,6 +70,8 @@ RUN cd openresty-${OPENRESTY_VERSION} && ./configure --add-module=../nchan-${NCH
 RUN cd luarocks-${LUAROCKS_VERSION} && ./configure --prefix=/opt/openresty/luajit --with-lua=/opt/openresty/luajit \
         --lua-suffix=jit --with-lua-include=/opt/openresty/luajit/include/luajit-2.1 \
         && make && make install
+        
+ENV PATH=/opt/openresty/bin:/opt/openresty/luajit/bin:$PATH
 
 RUN /opt/openresty/luajit/bin/luarocks install lustache \
   && /opt/openresty/luajit/bin/luarocks install lua-cjson \
@@ -82,9 +83,15 @@ RUN /opt/openresty/luajit/bin/luarocks install lustache \
   && /opt/openresty/luajit/bin/luarocks install multipart \
   && /opt/openresty/luajit/bin/luarocks install pgmoon
 
+RUN wget https://bellard.org/quickjs/binary_releases/quickjs-linux-x86_64-2021-03-27.zip \
+  && unzip quickjs-linux-x86_64-2021-03-27.zip \
+  && mv qjs /usr/local/bin
 
 #
 # Clojure
 #
 ADD ./infra/project.clj project.clj
 RUN lein deps && rm project.clj
+
+ADD ./infra/entrypoint.sh /usr/bin/entrypoint.sh
+RUN chmod +x /usr/bin/entrypoint.sh
