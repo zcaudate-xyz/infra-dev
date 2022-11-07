@@ -1,8 +1,8 @@
-(defproject zcaudate/infra "4.0.1"
+(defproject zcaudate/infra "0.0.0"
+  :description "testing clojure infra"
   :dependencies
   [;; dev
    [org.clojure/clojure "1.11.1"]
-   [nrepl "1.0.0"]
    [javax.xml.bind/jaxb-api "2.4.0-b180830.0359"]
    [com.sun.xml.bind/jaxb-core "4.0.1"]
    [com.sun.xml.bind/jaxb-impl "4.0.1"]
@@ -40,22 +40,22 @@
    [org.apache.maven/maven-aether-provider "3.3.9"]
 
    ;; lib.antlr
-   ;; [org.antlr/antlr4-runtime "4.11.1"]
-   ;; [org.antlr/antlr4 "4.11.1"]
-   ;; [thi.ng/structgen "0.2.1"]
+   [org.antlr/antlr4-runtime "4.11.1"]
+   [org.antlr/antlr4 "4.11.1"]
+   [thi.ng/structgen "0.2.1"]
    
    ;; rt.janino
    [org.codehaus.janino/janino "3.1.8"]
 
    ;; lib.lucene
-   [org.apache.lucene/lucene-core "8.10.0"]
-   [org.apache.lucene/lucene-queryparser "8.10.0"]
-   [org.apache.lucene/lucene-analyzers-common "8.10.0"]
-   [org.apache.lucene/lucene-suggest "8.10.0"]
+   [org.apache.lucene/lucene-core "9.4.1"]
+   [org.apache.lucene/lucene-queryparser "9.4.1"]
+   [org.apache.lucene/lucene-analyzers-common "8.11.2"]
+   [org.apache.lucene/lucene-suggest "9.4.1"]
 
    ;; lib.openpgp
-   [org.bouncycastle/bcprov-jdk15on "1.70"]
-   [org.bouncycastle/bcpg-jdk15on "1.70"]
+   [org.bouncycastle/bcprov-jdk15on "1.65"]
+   [org.bouncycastle/bcpg-jdk15on "1.65"]
 
    ;; lib.oshi
    [com.github.oshi/oshi-core "6.3.1"]
@@ -73,10 +73,10 @@
    [black.ninia/jep "4.1.0"]
 
    ;; rt.graal
-   [org.graalvm.sdk/graal-sdk "22.3.0"]
-   [org.graalvm.truffle/truffle-api "22.3.0"]
-   [org.graalvm.js/js "22.3.0"]
-   [org.graalvm.js/js-scriptengine "22.3.0"]
+   [org.graalvm.sdk/graal-sdk "21.2.0"]
+   [org.graalvm.truffle/truffle-api "21.2.0"]
+   [org.graalvm.js/js "21.2.0"]
+   [org.graalvm.js/js-scriptengine "21.2.0"]
    [commons-io/commons-io "2.11.0"]
 
    ;; rt.postgres
@@ -114,7 +114,7 @@
    [metosin/malli "0.2.1"]
 
    ;; std.html
-   [org.jsoup/jsoup "1.14.2"]
+   [org.jsoup/jsoup "1.15.3"]
 
    ;; std.image
    [com.twelvemonkeys.imageio/imageio-bmp  "3.9.3"]
