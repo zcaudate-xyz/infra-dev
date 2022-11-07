@@ -14,7 +14,7 @@ RUN apt-get update \
        x11vnc xvfb \
        docker.io \
        openjdk-11-jdk openjfx leiningen \
-       redis -y \
+       redis -y
 RUN curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc \
   && gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg \
   && echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs \
