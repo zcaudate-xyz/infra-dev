@@ -14,11 +14,7 @@ RUN apt-get update \
        openjdk-11-jdk openjfx leiningen \
        python3 python3-pip r-base -y \
  && curl -s https://deb.nodesource.com/setup_16.x | sh \
- && apt-get update && apt-get install postgresql-12 postgresql-client-12 nodejs -y
-
-# Chrome
-RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
- && dpkg -i google-chrome*.deb || apt-get --fix-broken install
+ && apt-get update && apt-get install nodejs -y
  
 # Redis@6.2.1
 RUN wget http://download.redis.io/releases/redis-6.2.1.tar.gz \
