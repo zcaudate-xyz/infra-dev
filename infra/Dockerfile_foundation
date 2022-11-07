@@ -44,7 +44,7 @@ RUN npm -g install ganache http-server pnpm yarn \
     dateformat@5.0.2 \
     drawille \
     eventsource@1.1.0 \
-    gl-matrix
+    gl-matrix \
     javascript-time-ago@2.3.10 \
     node-fetch@2.6.6 \
     node-localstorage@2.2.1 \
@@ -67,9 +67,9 @@ RUN npm -g install ganache http-server pnpm yarn \
 ENV OPENRESTY_VERSION=1.21.4.1
 ENV LUAROCKS_VERSION=3.9.1
 ENV NCHAN_VERSION=1.3.5                                                                                                                                  
-RUN wget https://openresty.org/download/openresty-${OPENRESTY_VERSION}.tar.gz && tar -xf openresty-${OPENRESTY_VERSION}.tar.gz
-RUN wget https://github.com/slact/nchan/archive/refs/tags/v${NCHAN_VERSION}.tar.gz && tar -xf v${NCHAN_VERSION}.tar.gz
-RUN wget https://luarocks.github.io/luarocks/releases/luarocks-${LUAROCKS_VERSION}.tar.gz && tar -xf luarocks-${LUAROCKS_VERSION}.tar.gz
+RUN wget https://openresty.org/download/openresty-${OPENRESTY_VERSION}.tar.gz && tar -xf openresty-${OPENRESTY_VERSION}.tar.gz \\
+  && wget https://github.com/slact/nchan/archive/refs/tags/v${NCHAN_VERSION}.tar.gz && tar -xf v${NCHAN_VERSION}.tar.gz \\
+  && wget https://luarocks.github.io/luarocks/releases/luarocks-${LUAROCKS_VERSION}.tar.gz && tar -xf luarocks-${LUAROCKS_VERSION}.tar.gz
 RUN cd openresty-${OPENRESTY_VERSION} && ./configure --add-module=../nchan-${NCHAN_VERSION} --with-pcre-jit \
         --with-ipv6 --prefix=/opt/openresty \
         && make && make install
@@ -77,15 +77,15 @@ RUN cd luarocks-${LUAROCKS_VERSION} && ./configure --prefix=/opt/openresty/luaji
         --lua-suffix=jit --with-lua-include=/opt/openresty/luajit/include/luajit-2.1 \
         && make && make install
 
-RUN /opt/openresty/luajit/bin/luarocks install lustache
-RUN /opt/openresty/luajit/bin/luarocks install lua-cjson
-RUN /opt/openresty/luajit/bin/luarocks install lua-crypt
-RUN /opt/openresty/luajit/bin/luarocks install lua-resty-openssl                                                                                                                               
-RUN /opt/openresty/luajit/bin/luarocks install lua-resty-http
-RUN /opt/openresty/luajit/bin/luarocks install lua-resty-uuid
-RUN /opt/openresty/luajit/bin/luarocks install lsqlite3
-RUN /opt/openresty/luajit/bin/luarocks install multipart
-RUN /opt/openresty/luajit/bin/luarocks install pgmoon
+RUN /opt/openresty/luajit/bin/luarocks install lustache \
+  && /opt/openresty/luajit/bin/luarocks install lua-cjson \
+  && /opt/openresty/luajit/bin/luarocks install lua-crypt \
+  && /opt/openresty/luajit/bin/luarocks install lua-resty-openssl \
+  && /opt/openresty/luajit/bin/luarocks install lua-resty-http \
+  && /opt/openresty/luajit/bin/luarocks install lua-resty-uuid \
+  && /opt/openresty/luajit/bin/luarocks install lsqlite3 \
+  && /opt/openresty/luajit/bin/luarocks install multipart \
+  && /opt/openresty/luajit/bin/luarocks install pgmoon \
 
 
 #
