@@ -136,8 +136,4 @@
 
    ;; TESTS
    [org.eclipse.jgit/org.eclipse.jgit "5.13.0.202109080827-r"]]
-  :global-vars {*warn-on-reflection* true}
-  :profiles {:dev {:plugins [[lein-ancient "0.6.15"]
-                             [lein-exec "0.3.7"]
-                             [lein-cljfmt "0.7.0"]
-                             [cider/cider-nrepl "0.28.7"]]})
+  :global-vars {*warn-on-reflection* true})
