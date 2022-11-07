@@ -10,6 +10,7 @@ RUN apt-get update \
        libhiredis-dev libsqlite3-dev libjemalloc-dev gettext-base \
        gpg gnupg2 make wget curl unzip jq tcc bc \
        x11vnc xvfb \
+       chromium-browser \
        docker.io \
        openjdk-11-jdk openjfx leiningen \
        python3 python3-pip r-base -y \
