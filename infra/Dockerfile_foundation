@@ -1,0 +1,25 @@
+FROM ubuntu:20.04
+ARG DEBIAN_FRONTEND=noninteractive
+
+WORKDIR /tmp
+
+RUN apt-get update
+RUN apt-get install -y \
+    build-essential libreadline-dev        # Build
+    wget curl unzip \                      # Tools
+    x11vnc xvfb \                          # VNC
+    docker.io \                            # Docker
+    openjdk-11-jdk openjfx leiningen \     # Clojure
+       
+# Java
+ENV JAVA_HOME=/usr/lib/jvm/default-java
+
+# Vnc                  
+RUN mkdir /root/.vnc                                                                                                                           
+RUN x11vnc -storepasswd 1234 /root/.vnc/passwd
+
+ADD entrypoint.sh /usr/bin/entrypoint.sh
+RUN chmod +x /usr/bin/entrypoint.sh
+
+ADD project.clj project.clj                                                                                                                     
+RUN lein deps && rm project.clj
