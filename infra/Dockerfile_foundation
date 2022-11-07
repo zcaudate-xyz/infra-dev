@@ -41,7 +41,7 @@ RUN x11vnc -storepasswd 1234 /root/.vnc/passwd
 ENV NODE_PATH=/usr/lib/node_modules
 RUN npm -g install ganache http-server pnpm yarn \
   && npm -g install \
-    react-native-async-storage/async-storage \
+    @react-native-async-storage/async-storage \
     blessed@0.1.81 \
     blessed-contrib@4.10.1 \
     bresenham@0.0.4 \
@@ -108,7 +108,7 @@ RUN cd luarocks-${LUAROCKS_VERSION} && ./configure --prefix=/opt/openresty/luaji
         --lua-suffix=jit --with-lua-include=/opt/openresty/luajit/include/luajit-2.1 \
         && make && make install
         
-ENV PATH=/opt/openresty/bin:/opt/openresty/luajit/bin:$PATH
+ENV PATH=/opt/openresty/bin:/opt/openresty/luajit/bin:/opt/openresty/nginx/sbin:$PATH
 
 RUN /opt/openresty/luajit/bin/luarocks install luasocket \
   && /opt/openresty/luajit/bin/luarocks install lustache \
