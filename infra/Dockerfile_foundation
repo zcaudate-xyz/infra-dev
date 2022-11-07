@@ -12,7 +12,7 @@ RUN apt-get update \
        x11vnc xvfb \
        docker.io \
        openjdk-11-jdk openjfx leiningen \
-       redis -y
+       r-base redis -y
 RUN curl -s https://deb.nodesource.com/setup_16.x | sh
 RUN apt-get update && apt-get install postgresql-12 postgresql-client-12 nodejs -y
        
@@ -38,6 +38,7 @@ RUN npm -g install ganache http-server pnpm yarn \
     dateformat@5.0.2 \
     drawille \
     eventsource@1.1.0 \
+    fastify \
     gl-matrix \
     javascript-time-ago@2.3.10 \
     node-fetch@2.6.6 \
@@ -66,8 +67,7 @@ RUN wget https://bellard.org/quickjs/binary_releases/quickjs-linux-x86_64-2021-0
 # R
 #
 
-RUN apt-get r-base \
-  && R -e "install.packages('jsonlite',dependencies=TRUE, repos='http://cran.rstudio.com/')"
+RUN R -e "install.packages('jsonlite',dependencies=TRUE, repos='http://cran.rstudio.com/')"
   
 #
 # Openresty/Nginx
