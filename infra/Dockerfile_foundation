@@ -80,7 +80,7 @@ RUN /opt/openresty/luajit/bin/luarocks install lustache \
   && /opt/openresty/luajit/bin/luarocks install lua-resty-uuid \
   && /opt/openresty/luajit/bin/luarocks install lsqlite3 \
   && /opt/openresty/luajit/bin/luarocks install multipart \
-  && /opt/openresty/luajit/bin/luarocks install pgmoon \
+  && /opt/openresty/luajit/bin/luarocks install pgmoon
 
 
 #
