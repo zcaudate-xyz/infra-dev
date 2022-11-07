@@ -18,7 +18,7 @@ RUN apt-get update \
 
 # Chrome
 RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
- && dpkg -i google-chrome*.deb
+ && dpkg -i google-chrome*.deb || apt-get --fix-broken install
  
 # Redis@6.2.1
 RUN wget http://download.redis.io/releases/redis-6.2.1.tar.gz \
