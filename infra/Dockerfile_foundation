@@ -8,11 +8,10 @@ RUN apt-get update \
        build-essential software-properties-common apt-transport-https lsb-release ca-certificates \
        libreadline-dev zlib1g-dev libssl-dev libpcre3 libpcre3-dev \
        libhiredis-dev libsqlite3-dev libjemalloc-dev gettext-base \
-       gpg gnupg2 make wget curl unzip \
+       gpg gnupg2 make wget curl unzip jq tcc bc \
        x11vnc xvfb \
        docker.io \
        openjdk-11-jdk openjfx leiningen \
-       r-base tcc\
        redis -y
 RUN curl -s https://deb.nodesource.com/setup_16.x | sh
 RUN apt-get update && apt-get install postgresql-12 postgresql-client-12 nodejs -y
@@ -27,7 +26,8 @@ RUN x11vnc -storepasswd 1234 /root/.vnc/passwd
 #
 # Nodejs
 #
-  
+
+ENV NODE_PATH=/usr/lib/node_modules
 RUN npm -g install ganache http-server pnpm yarn \
   && npm -g install \
     blessed@0.1.81 \
@@ -53,7 +53,21 @@ RUN npm -g install ganache http-server pnpm yarn \
     ws \
   && npm -g install bip32 bip39 bip84 bitcoinjs-lib@5.2.0 bitcoinjs-message@2.2.0 ecpair safe-buffer tiny-secp256k1 wif \
   && npm -g install ethers solc
+
+#
+# Quickjs
+#
+
+RUN wget https://bellard.org/quickjs/binary_releases/quickjs-linux-x86_64-2021-03-27.zip \
+  && unzip quickjs-linux-x86_64-2021-03-27.zip \
+  && mv qjs /usr/local/bin
   
+#
+# R
+#
+
+RUN apt-get r-base \
+  && R -e "install.packages('jsonlite',dependencies=TRUE, repos='http://cran.rstudio.com/')"
   
 #
 # Openresty/Nginx
@@ -73,7 +87,8 @@ RUN cd luarocks-${LUAROCKS_VERSION} && ./configure --prefix=/opt/openresty/luaji
         
 ENV PATH=/opt/openresty/bin:/opt/openresty/luajit/bin:$PATH
 
-RUN /opt/openresty/luajit/bin/luarocks install lustache \
+RUN /opt/openresty/luajit/bin/luarocks install luasocket \
+  && /opt/openresty/luajit/bin/luarocks install lustache \
   && /opt/openresty/luajit/bin/luarocks install lua-cjson \
   && /opt/openresty/luajit/bin/luarocks install lua-crypt \
   && /opt/openresty/luajit/bin/luarocks install lua-resty-openssl \
@@ -83,9 +98,6 @@ RUN /opt/openresty/luajit/bin/luarocks install lustache \
   && /opt/openresty/luajit/bin/luarocks install multipart \
   && /opt/openresty/luajit/bin/luarocks install pgmoon
 
-RUN wget https://bellard.org/quickjs/binary_releases/quickjs-linux-x86_64-2021-03-27.zip \
-  && unzip quickjs-linux-x86_64-2021-03-27.zip \
-  && mv qjs /usr/local/bin
 
 #
 # Clojure
