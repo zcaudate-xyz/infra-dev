@@ -8,7 +8,7 @@ RUN apt-get update \
        build-essential software-properties-common apt-transport-https lsb-release ca-certificates \
        libreadline-dev zlib1g-dev libssl-dev libpcre3 libpcre3-dev \
        libhiredis-dev libsqlite3-dev libjemalloc-dev gettext-base \
-       gpg gnupg2 make wget curl unzip jq tcc bc \
+       gpg gnupg2 make wget curl lsof unzip jq tcc bc \
        x11vnc xvfb \
        docker.io \
        openjdk-11-jdk openjfx leiningen \

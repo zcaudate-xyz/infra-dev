@@ -1,6 +1,5 @@
 #!/bin/bash                                                                                                                                     
 
-service postgresql start
 redis-server &
 Xvfb :1 -screen 0 800x600x16 &
 /usr/bin/x11vnc -display :1.0 -usepw &
