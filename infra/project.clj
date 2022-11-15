@@ -60,11 +60,20 @@
    ;; lib.oshi
    [com.github.oshi/oshi-core "6.3.1"]
 
+   ;; lib.postgres
+   [com.impossibl.pgjdbc-ng/pgjdbc-ng "0.8.9"]
+   
+   ;; lib.sqlite
+   [org.xerial/sqlite-jdbc   "3.36.0.3"]
+
    ;; math.stat
    [net.sourceforge.jdistlib/jdistlib "0.4.5"]
 
    ;; math.infix
    [org.scijava/parsington "3.0.0"]
+   
+   ;; rt.basic
+   [http-kit "2.5.3"]
    
    ;; rt.jocl
    [org.jocl/jocl "2.0.4"]
@@ -78,15 +87,6 @@
    [org.graalvm.js/js "21.2.0"]
    [org.graalvm.js/js-scriptengine "21.2.0"]
    [commons-io/commons-io "2.11.0"]
-
-   ;; rt.postgres
-   [com.impossibl.pgjdbc-ng/pgjdbc-ng "0.8.9"]
-   
-   ;; rt.wasm
-   [io.helins/wasm "0.0.0-alpha3"]
-   
-   ;; rt.websocket
-   [http-kit "2.5.3"]
 
    ;; std.pretty
    [org.clojure/core.rrb-vector "0.1.2"]
