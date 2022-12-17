@@ -117,7 +117,8 @@ RUN /opt/openresty/luajit/bin/luarocks install luasocket \
   && /opt/openresty/luajit/bin/luarocks install lua-resty-mail \
   && /opt/openresty/luajit/bin/luarocks install lsqlite3 \
   && /opt/openresty/luajit/bin/luarocks install multipart \
-  && /opt/openresty/luajit/bin/luarocks install pgmoon
+  && /opt/openresty/luajit/bin/luarocks install pgmoon \
+  && /opt/openresty/luajit/bin/luarocks install luaposix
 
 
 #
