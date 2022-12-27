@@ -20,8 +20,11 @@ RUN apt-get update \
 # Torch
 RUN git clone https://github.com/torch/distro.git /opt/torch --recursive \
   && cd /opt/torch \
-#  && bash install-deps \
   && ./install.sh
+  && /opt/torch/install/bin/luarocks install luasocket
+  && rm /root/.profile
+  
+ENV PATH=/opt/torch/install/bin/:$PATH
 
 # Minio
 RUN wget https://dl.min.io/server/minio/release/linux-amd64/archive/minio_20221029062133.0.0_amd64.deb -O minio.deb \
@@ -119,7 +122,6 @@ RUN /opt/openresty/luajit/bin/luarocks install luasocket \
   && /opt/openresty/luajit/bin/luarocks install multipart \
   && /opt/openresty/luajit/bin/luarocks install pgmoon \
   && /opt/openresty/luajit/bin/luarocks install luaposix
-
 
 ENV REDIS_VERSION=6.2.1
 ENV LUAJIT_VERSION=2.1.2
