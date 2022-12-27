@@ -32,6 +32,13 @@ RUN mkdir /root/.vnc
 RUN x11vnc -storepasswd 1234 /root/.vnc/passwd
 
 #
+# Torch
+#
+RUN git clone https://github.com/torch/distro.git /opt/torch --recursive \
+  && cd /opt/torch; bash install-deps; \
+  && ./install.sh
+
+#
 # Nodejs
 #
 
