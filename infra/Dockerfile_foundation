@@ -6,6 +6,7 @@ WORKDIR /tmp
 RUN apt-get update \
   && apt-get install \
        build-essential software-properties-common apt-transport-https lsb-release ca-certificates \
+       sudo \
        libreadline-dev zlib1g-dev libssl-dev libpcre3 libpcre3-dev \
        libhiredis-dev libsqlite3-dev libjemalloc-dev gettext-base \
        gpg gnupg2 make wget curl lsof unzip jq tcc bc \
@@ -15,10 +16,6 @@ RUN apt-get update \
        python3 python3-pip r-base -y \
  && curl -s https://deb.nodesource.com/setup_16.x | sh \
  && apt-get update && apt-get install nodejs -y
- 
-# Redis@6.2.1
-RUN wget http://download.redis.io/releases/redis-6.2.1.tar.gz \
-  && tar -xf redis-6.2.1.tar.gz && cd redis-6.2.1 && make && make install
 
 # Minio
 RUN wget https://dl.min.io/server/minio/release/linux-amd64/archive/minio_20221029062133.0.0_amd64.deb -O minio.deb \
@@ -128,6 +125,22 @@ RUN /opt/openresty/luajit/bin/luarocks install luasocket \
   && /opt/openresty/luajit/bin/luarocks install pgmoon \
   && /opt/openresty/luajit/bin/luarocks install luaposix
 
+
+ENV REDIS_VERSION=6.2.1
+ENV LUAJIT_VERSION=2.1.2
+ENV PATH=/opt/redis/bin:$PATH
+
+RUN apt-get update
+RUN apt-get install -yqq wget git make gcc build-essential \
+        libreadline-dev zlib1g-dev libssl-dev libpcre3 libpcre3-dev
+
+RUN wget https://github.com/zcaudate/redis-luajit/archive/refs/tags/v${REDIS_VERSION}-luajit.tar.gz && tar -xf v${REDIS_VERSION}-luajit.tar.gz \
+ && wget https://github.com/zcaudate/LuaJIT/archive/refs/tags/${LUAJIT_VERSION}-redis.tar.gz && tar -xf ${LUAJIT_VERSION}-redis.tar.gz \
+ && rm -R redis-luajit-${REDIS_VERSION}-luajit/deps/LuaJIT \
+ && mv LuaJIT-${LUAJIT_VERSION}-redis redis-luajit-${REDIS_VERSION}-luajit/deps/LuaJIT 
+RUN cd redis-luajit-${REDIS_VERSION}-luajit && make && make PREFIX=/opt/redis install
+RUN cd redis-luajit-${REDIS_VERSION}-luajit/deps/LuaJIT && make install
+RUN mv /usr/local/bin/luajit-2.1.0-beta3 /usr/local/bin/luajit
 
 #
 # Clojure
