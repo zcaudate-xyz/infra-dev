@@ -53,6 +53,7 @@ RUN npm -g install ganache http-server pnpm yarn \
     fastify \
     gl-matrix \
     javascript-time-ago@2.3.10 \
+    osc-js \
     node-fetch@2.6.6 \
     node-localstorage@2.2.1 \
     pg \
@@ -62,6 +63,7 @@ RUN npm -g install ganache http-server pnpm yarn \
     redis \
     sql.js \
     tiny-worker \
+    ua-parser-js \
     valtio \
     uuid@8.3.2 \
     window \
