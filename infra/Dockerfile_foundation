@@ -17,7 +17,7 @@ RUN apt-get update \
  && curl -s https://deb.nodesource.com/setup_16.x | sh \
  && apt-get update && apt-get install nodejs -y
 
-RUN add-apt-repository ppa:kisak/kisak-mesa && apt update && apt upgrade
+RUN add-apt-repository -y ppa:kisak/kisak-mesa && apt update && apt -y upgrade
 
 # Torch
 RUN git clone https://github.com/torch/distro.git /opt/torch --recursive \
