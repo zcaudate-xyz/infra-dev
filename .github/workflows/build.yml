@@ -16,7 +16,7 @@ jobs:
       matrix:
         include:
           - dockerfile: ./infra/Dockerfile_foundation
-            image: ghcr.io/zcaudate/testing-foundation
+            image: ghcr.io/zcaudate-xyz/testing-foundation
     permissions:
       contents: read
       packages: write
@@ -53,9 +53,9 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           
-      - name: Notify zcaudate/foundation-base
+      - name: Notify zcaudate-xyz/foundation-base
         uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ secrets.GH_TOKEN }}
-          repository: zcaudate/foundation-base
+          repository: zcaudate-xyz/foundation-base
           event-type: notify
