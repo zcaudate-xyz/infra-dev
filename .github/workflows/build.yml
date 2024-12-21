@@ -14,6 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        architecture: [amd64, arm64]
         include:
           - dockerfile: ./infra/Dockerfile_foundation
             image: ghcr.io/zcaudate/testing-foundation
@@ -50,8 +51,8 @@ jobs:
           context: .
           file: ${{ matrix.dockerfile }}
           push: true
-          platforms: "linux/amd64,linux/arm64"
-          tags: ${{ steps.meta.outputs.tags }}
+          platforms: linux/${{ matrix.architecture }}
+          tags: ghcr.io/zcaudate/testing-foundation:${{ matrix.architecture }}
           labels: ${{ steps.meta.outputs.labels }}
           
       - name: Notify zcaudate/foundation-base
