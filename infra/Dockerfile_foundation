@@ -13,8 +13,9 @@ RUN apt-get update \
        x11vnc xvfb \
        docker.io docker-compose \
        openjdk-11-jdk openjfx leiningen \
-       python3 python3-pip r-base -y \
- && curl -s https://deb.nodesource.com/setup_16.x | sh \
+       python3 python3-pip r-base -y 
+       
+RUN curl -s https://deb.nodesource.com/setup_18.x | sh \
  && apt-get update && apt-get install nodejs -y
 
 RUN add-apt-repository -y ppa:kisak/kisak-mesa && apt update && apt -y upgrade
