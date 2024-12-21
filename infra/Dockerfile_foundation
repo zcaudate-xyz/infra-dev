@@ -15,7 +15,7 @@ RUN apt-get update \
        openjdk-11-jdk openjfx leiningen \
        python3 python3-pip r-base -y 
        
-RUN curl -s https://deb.nodesource.com/setup_18.x | sh \
+RUN curl -fsSL https://deb.nodesource.com/setup_17.x | sudo -E bash \
  && apt-get update && apt-get install nodejs -y
 
 RUN add-apt-repository -y ppa:kisak/kisak-mesa && apt update && apt -y upgrade
