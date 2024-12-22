@@ -5,11 +5,19 @@ WORKDIR /tmp
 
 ARG ARCH
 
-# Conditional logic based on the architecture argument
 RUN if [ "$ARCH" = "amd64" ]; then \
-        wget https://dl.min.io/server/minio/release/linux-amd64/minio_20241218131544.0.0_amd64.deb -O minio.deb && sudo dpkg -i minio.deb \
+        echo "Running on amd64 architecture"; \
     elif [ "$ARCH" = "arm64" ]; then \
-        wget https://dl.min.io/server/minio/release/linux-arm64/minio_20241218131544.0.0_arm64.deb -O minio.deb && sudo dpkg -i minio.deb \
+        echo "Running on arm64 architecture"; \
     else \
         echo "Unknown architecture"; \
     fi
+
+# Conditional logic based on the architecture argument
+#RUN if [ "$ARCH" = "amd64" ]; then \
+#        wget https://dl.min.io/server/minio/release/linux-amd64/minio_20241218131544.0.0_amd64.deb -O minio.deb && sudo dpkg -i minio.deb \
+#    elif [ "$ARCH" = "arm64" ]; then \
+#        wget https://dl.min.io/server/minio/release/linux-arm64/minio_20241218131544.0.0_arm64.deb -O minio.deb && sudo dpkg -i minio.deb \
+#    else \
+#        echo "Unknown architecture"; \
+#    fi
