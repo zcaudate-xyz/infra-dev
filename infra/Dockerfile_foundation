@@ -24,7 +24,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash \
  && apt-get update && apt-get install nodejs -y
 
 # Rust
-RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
+RUN curl https://sh.rustup.rs -sSf | bash -s -- -y && ln -s /root/.cargo/bin/rustc /usr/bin/rustc
 
 # Mesa
 RUN add-apt-repository -y ppa:kisak/kisak-mesa && apt update && apt -y upgrade
