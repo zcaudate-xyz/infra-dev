@@ -38,6 +38,22 @@ RUN add-apt-repository -y ppa:kisak/kisak-mesa && apt update && apt -y upgrade
 #   
 # ENV PATH=/opt/torch/install/bin/:$PATH
 
+# Torch
+RUN ARCH=$(uname -m) && \
+    case $ARCH in \
+        x86_64) \
+            git clone https://github.com/torch/distro.git /opt/torch --recursive; \
+            cd /opt/torch; \
+            ./install.sh; \
+            /opt/torch/install/bin/luarocks install luasocket; \
+            rm /root/.profile \
+            ;; \
+        *) \
+            echo "Torch not installed: $ARCH"; \
+            ;; \
+    esac
+ENV PATH=/opt/torch/install/bin/:$PATH
+
 # Minio
 RUN ARCH=$(uname -m) && \
     case $ARCH in \
