@@ -12,26 +12,27 @@ RUN apt-get update \
        git gpg gnupg2 make cmake wget curl lsof unzip jq gcc tcc bc \
        x11vnc xvfb \
        docker.io docker-compose \
-       openjdk-21-jdk openjfx leiningen \
+       openjdk-11-jdk openjfx \
        python3 python3-pip r-base -y 
-       
+
+RUN wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein && chmod +x lein && mv lein /usr/bin/lein
+
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash \
  && apt-get update && apt-get install nodejs -y
 
 RUN add-apt-repository -y ppa:kisak/kisak-mesa && apt update && apt -y upgrade
 
 # Torch
-RUN git clone https://github.com/torch/distro.git /opt/torch --recursive \
-  && cd /opt/torch \
-  && ./install.sh \
-  && /opt/torch/install/bin/luarocks install luasocket \
-  && rm /root/.profile
-  
-ENV PATH=/opt/torch/install/bin/:$PATH
+# RUN git clone https://github.com/torch/distro.git /opt/torch --recursive \
+#   && cd /opt/torch \
+#   && ./install.sh \
+#   && /opt/torch/install/bin/luarocks install luasocket \
+#   && rm /root/.profile
+#   
+# ENV PATH=/opt/torch/install/bin/:$PATH
 
 # Minio
-RUN wget https://dl.min.io/server/minio/release/linux-amd64/archive/minio_20221029062133.0.0_amd64.deb -O minio.deb \
- && dpkg -i minio.deb
+RUN wget https://dl.min.io/server/minio/release/linux-arm64/archive/minio_20241213221912.0.0_arm64.deb -O minio.deb && sudo dpkg -i minio.deb
 
 # Java
 ENV JAVA_HOME=/usr/lib/jvm/default-java
@@ -78,8 +79,8 @@ RUN npm -g install ganache http-server pnpm yarn \
 # Quickjs
 #
 
-RUN wget https://bellard.org/quickjs/binary_releases/quickjs-linux-x86_64-2021-03-27.zip \
-  && unzip quickjs-linux-x86_64-2021-03-27.zip \
+RUN wget https://bellard.org/quickjs/binary_releases/quickjs-cosmo-2024-01-13.zip \
+  && unzip quickjs-cosmo-2024-01-13.zip \
   && mv qjs /usr/local/bin
   
 #
