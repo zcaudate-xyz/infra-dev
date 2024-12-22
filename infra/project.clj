@@ -123,7 +123,7 @@
    [borkdude/edamame "1.4.24"]
 
    ;; std.contract
-   [metosin/malli "0.14.0"]
+   [metosin/malli "0.17.0"]
 
    ;; std.html
    [org.jsoup/jsoup "1.17.2"]

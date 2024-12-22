@@ -20,6 +20,8 @@ RUN wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash \
  && apt-get update && apt-get install nodejs -y
 
+RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
+
 RUN add-apt-repository -y ppa:kisak/kisak-mesa && apt update && apt -y upgrade
 
 # Torch
