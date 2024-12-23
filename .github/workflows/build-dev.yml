@@ -7,17 +7,10 @@ on:
 
 jobs:
   
-  build-container-arm64:
+  build:
     runs-on: ubuntu-latest
-    
-    strategy:
-      matrix:
-        downstream: ['statstrade-dev/ci']
       
-    steps:      
-      - name: Setup Docker buildx
-        uses: docker/setup-buildx-action@v2
-        
+    steps:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
@@ -52,10 +45,11 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
           
       - name: List Directory
-        run: ls -al        
-        
-      # Login against a Docker registry except on PR
-      # https://github.com/docker/login-action
+        run: ls -al
+            
+      - name: Setup Docker buildx
+        uses: docker/setup-buildx-action@v2
+
       - name: Log into registry ${{ env.REGISTRY }}
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v2
@@ -79,7 +73,15 @@ jobs:
           platforms: "linux/amd64,linux/arm64"
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-
+  
+  notify:
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        downstream: ['statstrade-dev/ci']
+    
+    steps:    
       - name: Notify downstream
         uses: peter-evans/repository-dispatch@v2
         with:
