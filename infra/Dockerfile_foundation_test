@@ -1,0 +1,22 @@
+FROM ubuntu:24.04
+ARG DEBIAN_FRONTEND=noninteractive
+
+WORKDIR /tmp
+
+RUN apt-get update && apt-get install curl -y 
+
+RUN ARCH=$(uname -m) && \
+    case $ARCH in \
+        x86_64) \
+            MINIO_URL="https://dl.min.io/server/minio/release/linux-amd64/minio"; \
+            ;; \
+        aarch64) \
+            MINIO_URL="https://dl.min.io/server/minio/release/linux-arm64/minio"; \
+            ;; \
+        *) \
+            echo "Unsupported architecture: $ARCH"; \
+            exit 1; \
+            ;; \
+    esac && \
+    curl -o /usr/bin/minio $MINIO_URL && \
+    chmod +x /usr/bin/minio

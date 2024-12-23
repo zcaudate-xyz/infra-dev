@@ -15,6 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        architecture: [amd64, arm64]
         include:
           - dockerfile: ./infra/Dockerfile_foundation
             image: ghcr.io/zcaudate-xyz/testing-foundation
@@ -39,19 +40,21 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ github.token }}
+
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v4
         with:
           images: ${{ matrix.image }}
-
+      
       - name: Build and push Docker infra images
         uses: docker/build-push-action@v3
         with:
           context: .
           file: ${{ matrix.dockerfile }}
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          platforms: linux/${{ matrix.architecture }}
+          tags: ghcr.io/zcaudate/testing-foundation:${{ matrix.architecture }}
           labels: ${{ steps.meta.outputs.labels }}
           
       - name: Notify zcaudate-xyz/foundation-base
