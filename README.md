@@ -1,6 +1,6 @@
-# infra-foundation
+# infra-dev
 
-This creates the docker image `ghcr.io/zcaudate-xyz/infra-foundation` for testing of all the `foundation` libraries:
+This creates the docker images `ghcr.io/zcaudate-xyz/infra-foundation-clean` and `ghcr.io/zcaudate-xyz/infra-foundation-dev` for testing of all the `foundation` libraries:
   - foundation-base
   - foundation-embed
   - foundation-fx
@@ -17,7 +17,7 @@ docker pull ghcr.io/zcaudate-xyz/infra-foundation-clean:main
 The image with all the code installed is here:
 
 ```bash
-docker pull ghcr.io/zcaudate-xyz/infra-foundation:main
+docker pull ghcr.io/zcaudate-xyz/infra-foundation-dev:main
 ```
 
 ### Local Compilation
@@ -25,7 +25,7 @@ docker pull ghcr.io/zcaudate-xyz/infra-foundation:main
 The image can be created by:
 
 ```bash
-git clone git@github.com:zcaudate-xyz/infra-foundation.git
+git clone git@github.com:zcaudate-xyz/infra-dev.git
 cd infra-foundation
-docker build . -f infra/Dockerfile_foundation -t ghcr.io/zcaudate-xyz/infra-foundation-clean:main
+docker build . -f infra/Dockerfile_foundation_clean -t ghcr.io/zcaudate-xyz/infra-foundation-clean:main
 ```
