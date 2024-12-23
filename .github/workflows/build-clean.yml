@@ -7,6 +7,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
+      matrix:
+        downstream: 
+            - 'zcaudate-xyz/infra-foundation'
+            - 'zcaudate-xyz/foundation-base'
+            - 'zcaudate-xyz/foundation-embed'
+            - 'zcaudate-xyz/foundation-fx'
+            - 'zcaudate-xyz/foundation-web'
       
     permissions:
       contents: read
@@ -45,38 +52,11 @@ jobs:
           platforms: "linux/amd64,linux/arm64"
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          
-      - name: Notify Downstream
+
+      - name: Notify downstream
         uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ secrets.GH_TOKEN }}
-          repository: zcaudate-xyz/infra-foundation
-          event-type: infra-changed
-          
-      - name: Notify foundation-base
-        uses: peter-evans/repository-dispatch@v2
-        with:
-          token: ${{ secrets.GH_TOKEN }}
-          repository: zcaudate-xyz/foundation-base
-          event-type: infra-changed
-          
-      - name: Notify foundation-embed
-        uses: peter-evans/repository-dispatch@v2
-        with:
-          token: ${{ secrets.GH_TOKEN }}
-          repository: zcaudate-xyz/foundation-embed
-          event-type: infra-changed
-          
-      - name: Notify foundation-fx
-        uses: peter-evans/repository-dispatch@v2
-        with:
-          token: ${{ secrets.GH_TOKEN }}
-          repository: zcaudate-xyz/foundation-fx
-          event-type: infra-changed
-          
-      - name: Notify foundation-web
-        uses: peter-evans/repository-dispatch@v2
-        with:
-          token: ${{ secrets.GH_TOKEN }}
-          repository: zcaudate-xyz/foundation-web
-          event-type: infra-changed
+          repository: ${{ matrix.downstream }}
+          event-type: env-changed
+          client-payload: '{"repo": "${{ github.repository.id }}", "ref": "${{ github.ref }}", "sha": "${{ github.sha }}", "comment": "${{ github.payload.comment }}"}'

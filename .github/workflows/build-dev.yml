@@ -2,7 +2,7 @@ name: Build Dev Infra
 
 on: 
     repository_dispatch:
-      types: [infra-changed, code-changed]
+      types: [env-changed, code-changed]
     workflow_dispatch:
 
 jobs:
@@ -79,3 +79,11 @@ jobs:
           platforms: "linux/amd64,linux/arm64"
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Notify downstream
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          repository: ${{ matrix.downstream }}
+          event-type: infra-changed
+          client-payload: '{"repo": "${{ github.repository.id }}", "ref": "${{ github.ref }}", "sha": "${{ github.sha }}", "comment": "${{ github.payload.comment }}"}'
