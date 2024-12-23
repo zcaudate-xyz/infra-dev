@@ -54,7 +54,7 @@ jobs:
           file: ${{ matrix.dockerfile }}
           push: true
           platforms: linux/${{ matrix.architecture }}
-          tags: ghcr.io/zcaudate/testing-foundation:${{ matrix.architecture }}
+          tags: ghcr.io/zcaudate/infra-foundation:${{ matrix.architecture }}
           labels: ${{ steps.meta.outputs.labels }}
           
       - name: Notify zcaudate-xyz/foundation-base
