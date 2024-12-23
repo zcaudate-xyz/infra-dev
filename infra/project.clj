@@ -1,4 +1,4 @@
-(defproject zcaudate/infra "0.0.0"
+(defproject zcaudate-xyz/infra "0.0.0"
   :description "testing clojure infra"
   :dependencies
   [;; dev
