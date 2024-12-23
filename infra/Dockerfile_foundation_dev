@@ -1,0 +1,16 @@
+FROM ghcr.io/zcaudate-xyz/infra-foundation-clean:main
+ARG DEBIAN_FRONTEND=noninteractive
+
+WORKDIR /tmp
+
+ADD foundation-base /tmp/foundation-base
+RUN cd /tmp/foundation-base && lein install
+
+ADD foundation-embed /tmp/foundation-embed
+RUN cd /tmp/foundation-embed && lein install
+
+ADD foundation-fx /tmp/foundation-fx
+RUN cd /tmp/foundation-fx && lein install
+
+ADD foundation-web /tmp/foundation-web
+RUN cd /tmp/foundation-web && lein install
