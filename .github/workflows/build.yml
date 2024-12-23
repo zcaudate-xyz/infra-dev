@@ -18,7 +18,7 @@ jobs:
         architecture: [amd64, arm64]
         include:
           - dockerfile: ./infra/Dockerfile_foundation
-            image: ghcr.io/zcaudate-xyz/testing-foundation
+            image: ghcr.io/zcaudate-xyz/infra-foundation
     permissions:
       contents: read
       packages: write
@@ -54,7 +54,7 @@ jobs:
           file: ${{ matrix.dockerfile }}
           push: true
           platforms: linux/${{ matrix.architecture }}
-          tags: ghcr.io/zcaudate/infra-foundation:${{ matrix.architecture }}
+          tags: ${{ matrix.image }}:${{ matrix.architecture }}
           labels: ${{ steps.meta.outputs.labels }}
           
       - name: Notify zcaudate-xyz/foundation-base
