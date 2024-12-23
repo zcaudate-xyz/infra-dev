@@ -11,7 +11,7 @@ RUN apt-get update \
        libreadline-dev zlib1g-dev libssl-dev libpcre3 libpcre3-dev \
        libhiredis-dev libsqlite3-dev libjemalloc-dev gettext-base \
        git gpg gnupg2 make cmake wget curl lsof unzip jq gcc tcc bc \
-       x11vnc xvfb \
+       x11vnc xvfb entr \
        docker.io docker-compose \
        openjdk-11-jdk openjfx \
        python3 python3-pip r-base -y 
@@ -28,31 +28,6 @@ RUN curl https://sh.rustup.rs -sSf | bash -s -- -y && ln -s /root/.cargo/bin/rus
 
 # Mesa
 RUN add-apt-repository -y ppa:kisak/kisak-mesa && apt update && apt -y upgrade
-
-# Torch
-# RUN git clone https://github.com/torch/distro.git /opt/torch --recursive \
-#   && cd /opt/torch \
-#   && ./install.sh \
-#   && /opt/torch/install/bin/luarocks install luasocket \
-#   && rm /root/.profile
-#   
-# ENV PATH=/opt/torch/install/bin/:$PATH
-
-# Torch
-RUN ARCH=$(uname -m) && \
-    case $ARCH in \
-        x86_64) \
-            git clone https://github.com/torch/distro.git /opt/torch --recursive; \
-            cd /opt/torch; \
-            ./install.sh; \
-            /opt/torch/install/bin/luarocks install luasocket; \
-            rm /root/.profile \
-            ;; \
-        *) \
-            echo "Torch not installed: $ARCH"; \
-            ;; \
-    esac
-ENV PATH=/opt/torch/install/bin/:$PATH
 
 # Minio
 RUN ARCH=$(uname -m) && \
@@ -155,7 +130,6 @@ RUN /opt/openresty/luajit/bin/luarocks install luasocket \
   && /opt/openresty/luajit/bin/luarocks install pgmoon \
   && /opt/openresty/luajit/bin/luarocks install luaposix
 
-
 # Redis
 ENV REDIS_VERSION=6.2.1
 ENV LUAJIT_VERSION=2.1.2
@@ -167,6 +141,22 @@ RUN cd redis-luajit-${REDIS_VERSION}-luajit && make && make PREFIX=/opt/redis in
 RUN cd redis-luajit-${REDIS_VERSION}-luajit/deps/LuaJIT && make install
 RUN mv /usr/local/bin/luajit-2.1.0-beta3 /usr/local/bin/luajit
 ENV PATH=/opt/redis/bin:$PATH
+
+# Torch
+RUN ARCH=$(uname -m) && \
+    case $ARCH in \
+        x86_64) \
+            git clone https://github.com/torch/distro.git /opt/torch --recursive; \
+            cd /opt/torch; \
+            ./install.sh; \
+            /opt/torch/install/bin/luarocks install luasocket; \
+            rm /root/.profile \
+            ;; \
+        *) \
+            echo "Torch not installed: $ARCH"; \
+            ;; \
+    esac
+ENV PATH=/opt/torch/install/bin/:$PATH
 
 # Clojure
 ADD ./infra/project.clj project.clj
