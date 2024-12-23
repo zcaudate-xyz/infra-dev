@@ -1,6 +1,9 @@
 name: Build Dev Infra
 
-on: [workflow_dispatch]
+on: 
+    repository_dispatch:
+      types: [infra-changed, code-changed]
+    workflow_dispatch:
 
 jobs:
   

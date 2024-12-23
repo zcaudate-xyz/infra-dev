@@ -1,13 +1,6 @@
 name: Build Clean Infra
 
-on:
-  push:
-    branches: [ main ]
-    # Publish semver tags as releases.
-    tags: [ 'v*.*.*' ]
-  pull_request:
-    branches: [ main ]
-  workflow_dispatch:
+on: [workflow_dispatch]
 
 jobs:
   build-and-push-image:
@@ -53,9 +46,37 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           
-      - name: Notify zcaudate-xyz/foundation-base
+      - name: Notify Downstream
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          repository: zcaudate-xyz/infra-foundation
+          event-type: infra-changed
+          
+      - name: Notify foundation-base
         uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ secrets.GH_TOKEN }}
           repository: zcaudate-xyz/foundation-base
-          event-type: notify
+          event-type: infra-changed
+          
+      - name: Notify foundation-embed
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          repository: zcaudate-xyz/foundation-embed
+          event-type: infra-changed
+          
+      - name: Notify foundation-fx
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          repository: zcaudate-xyz/foundation-fx
+          event-type: infra-changed
+          
+      - name: Notify foundation-web
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          repository: zcaudate-xyz/foundation-web
+          event-type: infra-changed
