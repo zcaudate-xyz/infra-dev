@@ -39,11 +39,10 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ github.token }}
+
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v4
-        with:
-          images: ${{ matrix.image }}
 
       - name: Build and push Docker infra images
         uses: docker/build-push-action@v3
