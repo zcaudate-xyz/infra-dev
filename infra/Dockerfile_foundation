@@ -113,8 +113,8 @@ RUN npm -g install ganache http-server pnpm yarn \
   && npm -g install ethers@5.7.2 solc@0.8.17
 
 # Quickjs
-RUN wget https://bellard.org/quickjs/binary_releases/quickjs-cosmo-2024-01-13.zip \
-  && unzip quickjs-cosmo-2024-01-13.zip \
+RUN wget https://bellard.org/quickjs/binary_releases/quickjs-linux-x86_64-2021-03-27.zip \
+  && unzip quickjs-linux-x86_64-2021-03-27.zip \
   && mv qjs /usr/local/bin
   
 # R
