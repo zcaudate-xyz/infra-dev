@@ -1,11 +1,12 @@
-name: kmi single test
+name: Run KMI Single Infra
 
 on: 
-    repository_dispatch: [code_base_changed, code_embed_changed] 
+    repository_dispatch:
+      types: [code-embed-changed, all]
     workflow_dispatch:
 
 jobs:
-  test-standard: 
+  test-standard:
     strategy:
       fail-fast: false
       matrix:
