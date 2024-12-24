@@ -14,3 +14,17 @@ RUN cd /tmp/foundation-fx && lein install
 
 ADD foundation-web /tmp/foundation-web
 RUN cd /tmp/foundation-web && lein install
+
+#
+# Postgres
+#
+ENV REDIS_WRAPPER_VERSION=0.1.0
+
+RUN sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+RUN curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
+RUN apt update && apt install -y postgresql-plpython3-15 postgresql-server-dev-15 libhiredis-dev
+RUN wget https://github.com/zcaudate-xyz/redis_wrapper/archive/refs/tags/${REDIS_WRAPPER_VERSION}.tar.gz && tar -xf ${REDIS_WRAPPER_VERSION}.tar.gz
+RUN cd redis_wrapper-${REDIS_WRAPPER_VERSION} && make && make install
+
+RUN pip3 install redis --break-system-packages
+
