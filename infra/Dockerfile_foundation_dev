@@ -14,6 +14,3 @@ RUN cd /tmp/foundation-fx && lein install
 
 ADD foundation-web /tmp/foundation-web
 RUN cd /tmp/foundation-web && lein install
-
-
-CMD service postgresql start

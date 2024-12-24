@@ -197,6 +197,6 @@ ADD ./infra/project.clj project.clj
 RUN lein deps && rm project.clj
 
 # Entrypoint
-ADD ./infra/entrypoint.sh /usr/bin/entrypoint.sh
-RUN chmod +x /usr/bin/entrypoint.sh
+ADD ./infra/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
