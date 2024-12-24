@@ -1,0 +1,53 @@
+name: kmi single test
+
+on: 
+    repository_dispatch: [code_base_changed, code_embed_changed] 
+    workflow_dispatch:
+
+jobs:
+  test-standard: 
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - command: perf-single-add
+          - command: perf-single-thread
+          - command: perf-single-cleanup
+        
+    services:
+      redis:
+        image: redis:6
+        ports:
+          - 6379:6379
+      
+    steps:
+      - name: Log into registry ${{ env.REGISTRY }}
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ secrets.GH_USER }}
+          password: ${{ secrets.GH_TOKEN }}
+          
+      - name: Checkout foundation-base
+        uses: actions/checkout@v3
+        with:
+          repository: zcaudate-xyz/foundation-base
+          path: foundation-base
+          token: ${{ secrets.GH_TOKEN }}
+          
+      - name: Checkout foundation-embed
+        uses: actions/checkout@v3
+        with:
+          repository: zcaudate-xyz/foundation-embed
+          path: foundation-embed
+          token: ${{ secrets.GH_TOKEN }}
+      
+      - name: Performance Bench
+        run: >
+          docker run --network host
+          -v /var/run/docker.sock:/var/run/docker.sock
+          -v $HOME/.ssh:/root/.ssh
+          -v $(pwd):$(pwd) -w $(pwd)
+          ghcr.io/zcaudate-xyz/infra-foundation-clean:main 
+          bash -c "cd foundation-embed && make setup-checkouts && lein ${{ matrix.command }}"
