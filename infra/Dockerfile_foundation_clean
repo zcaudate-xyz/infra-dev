@@ -15,6 +15,12 @@ RUN apt-get update \
        docker.io docker-compose \
        openjdk-11-jdk openjfx \
        python3 python3-pip r-base -y 
+  
+# R
+# RUN R -e "install.packages('jsonlite',dependencies=TRUE, repos='http://cran.rstudio.com/')"
+# RUN apt-get install -y r-cran-jsonlite 
+RUN R -e "install.packages('jsonlite',repos='https://cloud.r-project.org/')"
+RUN ln -s /usr/bin/R /usr/bin/r
 
 # Leiningen
 RUN wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein && chmod +x lein && mv lein /usr/bin/lein
@@ -88,14 +94,24 @@ RUN npm -g install ganache http-server pnpm yarn \
   && npm -g install ethers@5.7.2 solc@0.8.17
 
 # Quickjs
-RUN wget https://bellard.org/quickjs/binary_releases/quickjs-linux-x86_64-2021-03-27.zip \
-  && unzip quickjs-linux-x86_64-2021-03-27.zip \
-  && mv qjs /usr/local/bin
-  
-# R
-# RUN R -e "install.packages('jsonlite',dependencies=TRUE, repos='http://cran.rstudio.com/')"
-RUN apt-get install -y r-cran-jsonlite 
-RUN ln -s /usr/bin/R /usr/bin/r
+ENV QUICKJS_VERSION=2024-01-13
+RUN ARCH=$(uname -m) && \
+    case $ARCH in \
+        x86_64) \
+            wget https://bellard.org/quickjs/binary_releases/quickjs-linux-x86_64-${QUICKJS_VERSION}.zip; \ 
+            unzip quickjs-linux-x86_64-${QUICKJS_VERSION}.zip; \
+            mv qjs /usr/local/bin; \
+            ;; \
+        aarch64) \
+            wget https://bellard.org/quickjs/binary_releases/quickjs-cosmo-${QUICKJS_VERSION}.zip; \ 
+            unzip quickjs-cosmo-${QUICKJS_VERSION}.zip; \
+            mv qjs /usr/local/bin; \
+            ;; \
+        *) \
+            echo "Torch not installed: $ARCH"; \
+            ;; \
+    esac
+RUN 
 
 # Python
 ENV PIP_BREAK_SYSTEM_PACKAGES 1
@@ -127,7 +143,6 @@ RUN /opt/openresty/luajit/bin/luarocks install luasocket \
   && /opt/openresty/luajit/bin/luarocks install lua-resty-uuid \
   && /opt/openresty/luajit/bin/luarocks install lua-resty-mail \
   && /opt/openresty/luajit/bin/luarocks install lsqlite3 \
-  && /opt/openresty/luajit/bin/luarocks install lsqlite3complete \
   && /opt/openresty/luajit/bin/luarocks install multipart \
   && /opt/openresty/luajit/bin/luarocks install pgmoon \
   && /opt/openresty/luajit/bin/luarocks install luaposix
@@ -154,7 +169,6 @@ RUN ARCH=$(uname -m) && \
             /opt/torch/install/bin/luarocks install luasocket; \
             /opt/torch/install/bin/luarocks install lustache; \
             /opt/torch/install/bin/luarocks install lsqlite3; \
-            /opt/torch/install/bin/luarocks install lsqlite3complete; \
             /opt/torch/install/bin/luarocks install lua-cjson; \
             rm /root/.profile \
             ;; \
