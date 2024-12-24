@@ -116,7 +116,7 @@ RUN
 # Python
 ENV PIP_BREAK_SYSTEM_PACKAGES 1
 RUN ln -s /usr/bin/python3 /usr/bin/python
-RUN pip3 install websocket
+RUN pip3 install websocket redis
 
 # Openresty/Nginx
 ENV OPENRESTY_VERSION=1.25.3.2
@@ -158,6 +158,20 @@ RUN cd redis-luajit-${REDIS_VERSION}-luajit && make && make PREFIX=/opt/redis in
 RUN cd redis-luajit-${REDIS_VERSION}-luajit/deps/LuaJIT && make install
 RUN mv /usr/local/bin/luajit-2.1.0-beta3 /usr/local/bin/luajit
 ENV PATH=/opt/redis/bin:$PATH
+
+# Postgres
+ENV REDIS_WRAPPER_VERSION=0.1.0
+RUN sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+RUN curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
+RUN apt update && apt install -y postgresql-plpython3-15 postgresql-server-dev-15 libhiredis-dev
+RUN wget https://github.com/zcaudate-xyz/redis_wrapper/archive/refs/tags/${REDIS_WRAPPER_VERSION}.tar.gz && tar -xf ${REDIS_WRAPPER_VERSION}.tar.gz
+RUN cd redis_wrapper-${REDIS_WRAPPER_VERSION} && make && make install
+
+# Postgres Password
+ENV PG_HBA_FILE "/etc/postgresql/15/main/pg_hba.conf"
+RUN sudo sed -i 's/local\s\+all\s\+postgres\s\+peer/local   all             postgres                                trust/' "$PG_HBA_FILE"
+RUN service postgresql start
+RUN sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'postgres';"
 
 # Torch
 RUN ARCH=$(uname -m) && \
