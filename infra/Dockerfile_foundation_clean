@@ -150,6 +150,9 @@ RUN ARCH=$(uname -m) && \
             cd /opt/torch; \
             ./install.sh; \
             /opt/torch/install/bin/luarocks install luasocket; \
+            /opt/torch/install/bin/luarocks install lustache; \
+            /opt/torch/install/bin/luarocks install lsqlite3; \
+            /opt/torch/install/bin/luarocks install lua-cjson; \
             rm /root/.profile \
             ;; \
         *) \
