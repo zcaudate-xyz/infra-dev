@@ -93,7 +93,8 @@ RUN wget https://bellard.org/quickjs/binary_releases/quickjs-linux-x86_64-2021-0
   && mv qjs /usr/local/bin
   
 # R
-RUN R -e "install.packages('jsonlite',dependencies=TRUE, repos='http://cran.rstudio.com/')"
+# RUN R -e "install.packages('jsonlite',dependencies=TRUE, repos='http://cran.rstudio.com/')"
+RUN apt-get install -y r-cran-jsonlite 
 RUN ln -s /usr/bin/R /usr/bin/r
 
 # Python

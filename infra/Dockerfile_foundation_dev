@@ -26,5 +26,18 @@ RUN apt update && apt install -y postgresql-plpython3-15 postgresql-server-dev-1
 RUN wget https://github.com/zcaudate-xyz/redis_wrapper/archive/refs/tags/${REDIS_WRAPPER_VERSION}.tar.gz && tar -xf ${REDIS_WRAPPER_VERSION}.tar.gz
 RUN cd redis_wrapper-${REDIS_WRAPPER_VERSION} && make && make install
 
+
+#
+# Postgres Password
+#
+ENV PG_HBA_FILE "/etc/postgresql/15/main/pg_hba.conf"
+RUN sudo sed -i 's/local\s\+all\s\+postgres\s\+peer/local   all             postgres                                trust/' "$PG_HBA_FILE"
+RUN service postgresql start
+RUN sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'postgres';"
+
+# 
+# Redis
+# 
 RUN pip3 install redis --break-system-packages
 
+CMD service postgresql start
