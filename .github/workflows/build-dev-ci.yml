@@ -1,0 +1,83 @@
+name: Build Infra Dev CI
+
+on: 
+    repository_dispatch:
+      types: [infra-clean-main-changed, code-changed]
+    workflow_dispatch:
+
+jobs:
+  build-ci:
+    runs-on: ubuntu-latest
+      
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          path: infra-dev
+          
+      - name: Checkout base repository
+        uses: actions/checkout@v3
+        with:
+          repository: zcaudate-xyz/foundation-base
+          path: foundation-base
+          token: ${{ secrets.GH_TOKEN }}
+          
+      - name: Checkout embed repository
+        uses: actions/checkout@v3
+        with:
+          repository: zcaudate-xyz/foundation-embed
+          path: foundation-embed
+          token: ${{ secrets.GH_TOKEN }}
+          
+      - name: Checkout fx repository
+        uses: actions/checkout@v3
+        with:
+          repository: zcaudate-xyz/foundation-fx
+          path: foundation-fx
+          token: ${{ secrets.GH_TOKEN }}
+          
+      - name: Checkout web repository
+        uses: actions/checkout@v3
+        with:
+          repository: zcaudate-xyz/foundation-web
+          path: foundation-web
+          token: ${{ secrets.GH_TOKEN }}
+          
+      - name: List Directory
+        run: ls -al
+            
+      - name: Setup Docker buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log into registry ${{ env.REGISTRY }}
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ secrets.GH_USER }}
+          password: ${{ secrets.GH_TOKEN }}
+
+      - name: Build and push Docker infra images
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: ./foundation-ci/infra/Dockerfile_foundation_dev
+          push: true
+          tags: ghcr.io/zcaudate-xyz/infra-foundation-dev:ci
+          labels: ${{ steps.meta.outputs.labels }}
+  
+  notify-ci:
+    needs: build-ci
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        downstream: ['statstrade-dev/ci']
+    
+    steps:    
+      - name: Notify downstream
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          repository: ${{ matrix.downstream }}
+          event-type: infra-changed
+          client-payload: '{"repo": "${{ github.repository.id }}", "ref": "${{ github.ref }}", "sha": "${{ github.sha }}", "comment": "${{ github.payload.comment }}"}'

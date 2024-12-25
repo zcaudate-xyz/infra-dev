@@ -16,7 +16,8 @@ ADD foundation-web /tmp/foundation-web
 RUN cd /tmp/foundation-web && lein install
 
 # Entrypoint
-ADD ./infra/entrypoint.sh /usr/local/bin/entrypoint.sh
+ADD ./infra-dev/infra/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
+
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
