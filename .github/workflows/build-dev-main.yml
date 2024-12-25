@@ -73,19 +73,3 @@ jobs:
           platforms: "linux/amd64,linux/arm64"
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-  
-  notify:
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        downstream: []
-    
-    steps:    
-      - name: Notify downstream
-        uses: peter-evans/repository-dispatch@v2
-        with:
-          token: ${{ secrets.GH_TOKEN }}
-          repository: ${{ matrix.downstream }}
-          event-type: infra-changed
-          client-payload: '{"repo": "${{ github.repository.id }}", "ref": "${{ github.ref }}", "sha": "${{ github.sha }}", "comment": "${{ github.payload.comment }}"}'
