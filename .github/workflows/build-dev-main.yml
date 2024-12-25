@@ -68,7 +68,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: ./foundation-ci/infra/Dockerfile_foundation_dev
+          file: ./infra-dev/infra/Dockerfile_foundation_dev
           push: true
           platforms: "linux/amd64,linux/arm64"
           tags: ${{ steps.meta.outputs.tags }}
