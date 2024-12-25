@@ -30,9 +30,7 @@ RUN ARCH=$(uname -m) && \
             echo "Unsupported architecture: $ARCH"; \
             exit 1; \
             ;; \
-    esac && \
-    curl -o /usr/bin/minio $MINIO_URL && \
-    chmod +x /usr/bin/minio
+    esac
 
 # Leiningen
 RUN wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein && chmod +x lein && mv lein /usr/bin/lein
