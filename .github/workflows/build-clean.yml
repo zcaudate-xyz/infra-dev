@@ -79,13 +79,24 @@ jobs:
           tags: ghcr.io/zcaudate-xyz/infra-foundation-clean:ci
           labels: ${{ steps.meta.outputs.labels }}
 
-  notify:
+  notify-build:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify downstream
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          repository: zcaudate-xyz/infra-dev
+          event-type: infra-clean-changed
+          client-payload: '{"repo": "${{ github.repository.id }}", "ref": "${{ github.ref }}", "sha": "${{ github.sha }}", "comment": "${{ github.payload.comment }}"}'
+          
+  notify-tests:
     needs: build-ci
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        downstream: 
-            - 'zcaudate-xyz/infra-foundation'
+        downstream:
             - 'zcaudate-xyz/foundation-base'
             - 'zcaudate-xyz/foundation-embed'
             - 'zcaudate-xyz/foundation-fx'
@@ -97,5 +108,5 @@ jobs:
         with:
           token: ${{ secrets.GH_TOKEN }}
           repository: ${{ matrix.downstream }}
-          event-type: env-changed
+          event-type: infra-clean-changed
           client-payload: '{"repo": "${{ github.repository.id }}", "ref": "${{ github.ref }}", "sha": "${{ github.sha }}", "comment": "${{ github.payload.comment }}"}'
