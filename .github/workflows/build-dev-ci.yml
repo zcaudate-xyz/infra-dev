@@ -61,7 +61,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: ./foundation-ci/infra/Dockerfile_foundation_dev
+          file: ./infra-dev/infra/Dockerfile_foundation_dev
           push: true
           tags: ghcr.io/zcaudate-xyz/infra-foundation-dev:ci
           labels: ${{ steps.meta.outputs.labels }}
