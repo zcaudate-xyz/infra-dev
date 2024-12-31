@@ -12,10 +12,18 @@ RUN apt-get update \
        libhiredis-dev libsqlite3-dev libjemalloc-dev gettext-base \
        git gpg gnupg2 make cmake wget curl lsof unzip jq gcc tcc bc \
        x11vnc xvfb entr \
-       docker.io docker-compose \
        openjdk-11-jdk openjfx \
        python3 python3-pip r-base -y 
-  
+
+# Node
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash \
+ && apt-get update && apt-get install nodejs -y
+
+# Docker
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg \
+  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null \
+  && apt-get update && apt-get install docker.io docker-compose docker-buildx-plugin -y
+
 # R
 RUN ARCH=$(uname -m) && \
     case $ARCH in \
@@ -34,10 +42,6 @@ RUN ARCH=$(uname -m) && \
 
 # Leiningen
 RUN wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein && chmod +x lein && mv lein /usr/bin/lein
-
-# Node
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash \
- && apt-get update && apt-get install nodejs -y
 
 # Rust
 RUN curl https://sh.rustup.rs -sSf | bash -s -- -y && ln -s /root/.cargo/bin/rustc /usr/bin/rustc
