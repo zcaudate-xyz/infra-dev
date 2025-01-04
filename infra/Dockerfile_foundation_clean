@@ -32,7 +32,6 @@ RUN ARCH=$(uname -m) && \
             ln -s /usr/bin/R /usr/bin/r; \
             ;; \
         aarch64) \
-            apt-get install -y r-cran-jsonlite; \
             ;; \
         *) \
             echo "Unsupported architecture: $ARCH"; \
