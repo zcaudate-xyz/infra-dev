@@ -17,6 +17,7 @@ else
   exit 1
 fi
 
+# Install R
 ARCH=$(uname -m) &&
 case $ARCH in
   aarch64)
@@ -26,6 +27,12 @@ case $ARCH in
   *)
     ;; 
 esac
+
+# Setup Display
+Xvfb :1 -screen 0 800x600x16 &
+/usr/bin/x11vnc -display :1.0 -usepw &
+export DISPLAY=:1.0
+export PATH=$HOME/bin:$PATH
 
 # Check if any additional command is provided
 if [ $# -gt 0 ]; then
