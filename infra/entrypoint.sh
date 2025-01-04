@@ -17,6 +17,16 @@ else
   exit 1
 fi
 
+ARCH=$(uname -m) &&
+case $ARCH in
+  aarch64)
+    R -e "install.packages('jsonlite',repos='https://cloud.r-project.org/')";
+    ln -s /usr/bin/R /usr/bin/r;
+    ;;
+  *)
+    ;; 
+esac
+
 # Check if any additional command is provided
 if [ $# -gt 0 ]; then
   echo "Executing additional command: $@"
