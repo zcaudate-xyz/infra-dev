@@ -101,6 +101,7 @@ jobs:
             - 'zcaudate-xyz/foundation-embed'
             - 'zcaudate-xyz/foundation-fx'
             - 'zcaudate-xyz/foundation-web'
+            - 'zcaudate-xyz/infra-dev
 
     steps:
       - name: Notify downstream
