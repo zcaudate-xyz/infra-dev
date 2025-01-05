@@ -1,0 +1,25 @@
+FROM ghcr.io/zcaudate-xyz/infra-foundation-clean:main
+ARG DEBIAN_FRONTEND=noninteractive
+
+WORKDIR /tmp
+
+RUN apt-get install -y ocl-icd-opencl-dev opencl-headers clinfo pocl-opencl-icd
+
+ADD foundation-base /tmp/foundation-base
+RUN cd /tmp/foundation-base && lein install
+
+ADD foundation-embed /tmp/foundation-embed
+RUN cd /tmp/foundation-embed && lein install
+
+ADD foundation-fx /tmp/foundation-fx
+RUN cd /tmp/foundation-fx && lein install
+
+ADD foundation-web /tmp/foundation-web
+RUN cd /tmp/foundation-web && lein install
+
+# Entrypoint
+ADD ./infra-dev/infra/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+
