@@ -98,8 +98,6 @@ jobs:
       matrix:
         downstream:
             - 'zcaudate-xyz/foundation-base'
-            - 'zcaudate-xyz/foundation-embed'
-            - 'zcaudate-xyz/foundation-fx'
             - 'zcaudate-xyz/foundation-web'
             - 'zcaudate-xyz/infra-dev'
 
