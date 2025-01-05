@@ -62,5 +62,5 @@ jobs:
           -v $(pwd):$(pwd) -w $(pwd)
           -e BENCH_BATCH=10000
           -e BENCH_TOTAL=${{ matrix.total }}
-          ghcr.io/zcaudate-xyz/infra-foundation-clean:main 
+          ghcr.io/zcaudate-xyz/infra-foundation-dev:ci 
           bash -c "cd foundation-embed && make setup-checkouts && lein ${{ matrix.command }}"
