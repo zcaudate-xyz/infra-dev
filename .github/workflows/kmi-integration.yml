@@ -2,7 +2,7 @@ name: Run KMI Integration Infra
 
 on: 
     repository_dispatch:
-      types: [code-embed-changed, all]
+      types: [all]
     workflow_dispatch:
 
 jobs:
