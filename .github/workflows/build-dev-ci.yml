@@ -71,7 +71,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        downstream: ['statstrade-dev/ci']
+        downstream: 
+            - 'statstrade-dev/ci'
+            - 'zcaudate-xyz/foundation-embed'
+            - 'zcaudate-xyz/foundation-fx'
     
     steps:    
       - name: Notify downstream
