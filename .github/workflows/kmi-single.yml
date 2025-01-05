@@ -51,5 +51,5 @@ jobs:
           -v /var/run/docker.sock:/var/run/docker.sock
           -v $HOME/.ssh:/root/.ssh
           -v $(pwd):$(pwd) -w $(pwd)
-          ghcr.io/zcaudate-xyz/infra-foundation-clean:main 
+          ghcr.io/zcaudate-xyz/infra-foundation-dev:ci 
           bash -c "cd foundation-embed && make setup-checkouts && lein ${{ matrix.command }}"
