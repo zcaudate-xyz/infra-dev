@@ -12,7 +12,7 @@ RUN apt-get update \
        libhiredis-dev libsqlite3-dev libjemalloc-dev gettext-base \
        git gpg gnupg2 make cmake wget curl lsof unzip jq gcc tcc bc \
        x11vnc xvfb entr \
-       openjdk-21-jdk openjfx \
+       openjdk-21-jdk openjfx default-jdk\
        python3 python3-pip r-base -y 
 
 # Node
@@ -23,6 +23,12 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash \
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg \
   && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null \
   && apt-get update && apt-get install docker.io docker-compose docker-buildx-plugin -y
+
+# CONDA
+ENV CONDA_DIR /opt/conda
+RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh && \
+    /bin/bash ~/miniconda.sh -b -p /opt/conda
+ENV PATH=$CONDA_DIR/bin:$PATH
 
 # R
 RUN ARCH=$(uname -m) && \
