@@ -3,7 +3,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /tmp
 
-RUN apt-get update && apt-get install nano tmux
+RUN apt-get update && apt-get -y install nano tmux
 
 # Tmux conf
 ADD ./infra-dev/infra/.tmux.conf /root/.tmux.conf
