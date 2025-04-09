@@ -1,0 +1,12 @@
+127.0.0.1       localhost
+::1     localhost ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+172.200.0.2     2dbc6516c394
+
+127.0.0.1    statstrade.local
+127.0.0.1    admin.statstrade.local
+127.0.0.1    ws.statstrade.local
+127.0.0.1    auth.statstrade.local

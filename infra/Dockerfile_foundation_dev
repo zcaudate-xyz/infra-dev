@@ -20,6 +20,9 @@ RUN cd /tmp/foundation-fx && lein install
 ADD foundation-web /tmp/foundation-web
 RUN cd /tmp/foundation-web && lein install
 
+# Hosts
+ADD ./infra-dev/infra/hosts /etc/hosts
+
 # Entrypoint
 ADD ./infra-dev/infra/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
