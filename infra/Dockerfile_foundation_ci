@@ -3,6 +3,8 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /tmp
 
+RUN apt-get update && apt-get -y install nano tmux
+
 RUN apt-get install -y ocl-icd-opencl-dev opencl-headers clinfo pocl-opencl-icd
 
 ADD foundation-base /tmp/foundation-base
