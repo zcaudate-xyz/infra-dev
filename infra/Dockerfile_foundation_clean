@@ -213,6 +213,11 @@ RUN ARCH=$(uname -m) && \
             /opt/torch/install/bin/luarocks install lustache; \
             /opt/torch/install/bin/luarocks install lsqlite3; \
             /opt/torch/install/bin/luarocks install lua-cjson; \
+            /opt/torch/install/bin/luarocks install lua-cjson; \
+            /opt/torch/install/bin/luarocks install lua-resty-openssl; \
+            /opt/torch/install/bin/luarocks install lua-resty-http; \
+            /opt/torch/install/bin/luarocks install lua-resty-uuid; \
+            /opt/torch/install/bin/luarocks install lua-resty-mail; \
             rm /root/.profile \
             ;; \
         *) \
