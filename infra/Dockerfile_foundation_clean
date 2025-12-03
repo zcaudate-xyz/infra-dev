@@ -12,7 +12,7 @@ RUN apt-get update \
        libhiredis-dev libsqlite3-dev libjemalloc-dev gettext-base \
        git gpg gnupg2 make cmake wget curl lsof unzip jq gcc tcc bc \
        x11vnc xvfb entr\
-       openjdk-24-jdk openjfx default-jdk \
+       openjdk-21-jdk openjfx default-jdk \
        python3 python3-pip python3-redis r-base -y 
 
 # Node
