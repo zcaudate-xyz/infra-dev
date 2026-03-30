@@ -5,16 +5,17 @@ WORKDIR /tmp
 
 # Prerequisites
 RUN apt-get update \
-  && apt-get install \
-       build-essential software-properties-common apt-transport-https lsb-release ca-certificates net-tools\
+  && apt-get install -y \
+       build-essential software-properties-common apt-transport-https lsb-release ca-certificates net-tools \
        sudo \
        libreadline-dev zlib1g-dev libssl-dev libpcre3 libpcre3-dev \
        libhiredis-dev libsqlite3-dev libjemalloc-dev gettext-base \
        git gpg gnupg2 make cmake wget curl lsof unzip jq gcc tcc bc \
-       x11vnc xvfb entr\
+       x11vnc xvfb entr \
        openjdk-21-jdk openjfx default-jdk \
        python3 python3-pip python3-redis r-base \
-       perl php-cli ruby-full -y 
+       perl php-cli ruby-full \
+       julia erlang ghc cabal-install
 
 # Node
 RUN curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash \
