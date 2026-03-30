@@ -9,6 +9,11 @@
    [com.sun.xml.bind/jaxb-impl "4.0.3"]
    [clj-kondo "2025.02.20"]
 
+   ;; foundation-index
+   [org.clojure/java.jdbc "0.7.12"]
+   [org.clojure/data.json "2.4.0"]
+   [org.xerial/sqlite-jdbc "3.36.0.3"]
+
    ;; code.ai
    [org.apache.opennlp/opennlp-tools "2.4.0"]
    [ai.djl/api "0.35.0"]
@@ -20,7 +25,7 @@
    ;; code.doc
    [markdown-clj/markdown-clj "1.11.8"] ;; not mustache
    
-   ;; code.java.compile
+   ;; code.tool.java.compile
    [org.ow2.asm/asm "9.7.1"]
    
    ;; code.manage
@@ -59,6 +64,7 @@
    [org.bouncycastle/bcpg-jdk15on "1.65"]
 
    ;; lib.postgres
+   [org.postgresql/postgresql "42.7.2"]
    [com.impossibl.pgjdbc-ng/pgjdbc-ng "0.8.9"
     :exclusions [io.netty/netty-common
                  io.netty/netty-buffer
@@ -81,14 +87,12 @@
    [http-kit "2.8.0"]
    
    ;; rt.graal
-   [org.graalvm.sdk/graal-sdk "21.2.0"]
-   [org.graalvm.truffle/truffle-api "21.2.0"]
-   [org.graalvm.js/js "21.2.0"]
-   [org.graalvm.js/js-scriptengine "21.2.0"]
+   [org.graalvm.polyglot/polyglot "24.1.0"]
+   [org.graalvm.js/js-language "24.1.0"]
    [commons-io/commons-io "2.15.1"]
    
    ;; rt.jep
-   [black.ninia/jep "4.2.0"]
+   [black.ninia/jep "4.3.1"]
    
    ;; rt.libpython
    [clj-python/libpython-clj "2.026"]
@@ -142,15 +146,17 @@
    
    
    ;; MCP
-   [org.hugoduncan/mcp-clj-server "0.1.60"]
-   [org.clojure/core.async "1.6.681"]
-   [http-kit "2.8.0"]
    [cheshire "5.13.0"]
-   [com.cognitect/transit-clj "1.0.333"]
-   [medley "1.4.0"]
-   [org.clojure/tools.logging "1.3.0"]
-   [ch.qos.logback/logback-classic "1.5.6"]
-   [org.clojure/data.json "2.5.1"]
+   [com.fasterxml.jackson.core/jackson-core "2.20.0"]
+   [com.fasterxml.jackson.core/jackson-databind "2.15.2"]
+   [io.modelcontextprotocol.sdk/mcp "0.11.2"]
+   [io.modelcontextprotocol.sdk/mcp-spring-webflux "0.11.2"]
+   [org.springframework/spring-webflux "6.0.11"]
+   [org.springframework/spring-context "6.0.11"]
+   [io.projectreactor.netty/reactor-netty "1.1.9"]
+   [hato/hato "1.0.0"]
+   [org.slf4j/slf4j-simple "2.0.13"]
+   ;; -- end mcp
    
    ;; TESTS - std.object
    [org.eclipse.jgit/org.eclipse.jgit "5.13.0.202109080827-r"]]
