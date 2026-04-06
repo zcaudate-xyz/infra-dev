@@ -13,11 +13,10 @@ RUN apt-get update \
        git gpg gnupg2 make cmake wget curl lsof unzip jq gcc tcc bc \
        x11vnc xvfb entr\
        openjdk-21-jdk openjfx default-jdk \
-       python3 python3-pip python3-redis r-base \
-       perl php-cli ruby-full -y 
+       python3 python3-pip python3-redis r-base -y 
 
 # Node
-RUN curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash \
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash \
  && apt-get update && apt-get install nodejs -y
 
 # Docker
@@ -64,32 +63,6 @@ RUN wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
 
 # Rust
 RUN curl https://sh.rustup.rs -sSf | bash -s -- -y && ln -s /root/.cargo/bin/rustc /usr/bin/rustc
-
-# Go
-ENV GO_VERSION=1.23.4
-RUN ARCH=$(uname -m) && \
-    case $ARCH in \
-        x86_64) GO_ARCH="amd64" ;; \
-        aarch64) GO_ARCH="arm64" ;; \
-        *) echo "Unsupported architecture: $ARCH"; exit 1 ;; \
-    esac && \
-    wget https://go.dev/dl/go${GO_VERSION}.linux-${GO_ARCH}.tar.gz && \
-    tar -C /usr/local -xzf go${GO_VERSION}.linux-${GO_ARCH}.tar.gz && \
-    rm go${GO_VERSION}.linux-${GO_ARCH}.tar.gz
-ENV PATH=$PATH:/usr/local/go/bin
-
-# Dart
-ENV DART_VERSION=3.7.2
-RUN ARCH=$(uname -m) && \
-    case $ARCH in \
-        x86_64) DART_ARCH="x64" ;; \
-        aarch64) DART_ARCH="arm64" ;; \
-        *) echo "Unsupported architecture: $ARCH"; exit 1 ;; \
-    esac && \
-    wget https://storage.googleapis.com/dart-archive/channels/stable/release/${DART_VERSION}/sdk/dartsdk-linux-${DART_ARCH}-release.zip && \
-    unzip dartsdk-linux-${DART_ARCH}-release.zip -d /usr/local/ && \
-    rm dartsdk-linux-${DART_ARCH}-release.zip
-ENV PATH=$PATH:/usr/local/dart-sdk/bin
 
 # Minio
 RUN ARCH=$(uname -m) && \
@@ -172,7 +145,7 @@ RUN
 # Python
 ENV PIP_BREAK_SYSTEM_PACKAGES 1
 RUN ln -s /usr/bin/python3 /usr/bin/python
-RUN pip3 install websocket websockets redis
+RUN pip3 install websocket redis
 
 # Openresty/Nginx
 ENV OPENRESTY_VERSION=1.27.1.1
