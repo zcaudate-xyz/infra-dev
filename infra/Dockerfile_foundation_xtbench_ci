@@ -1,0 +1,170 @@
+FROM ubuntu:24.04
+
+ARG DEBIAN_FRONTEND=noninteractive
+ARG XTBENCH_LANG
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+WORKDIR /tmp
+
+ENV LEIN_ROOT=true
+ENV NODE_PATH=/usr/lib/node_modules
+ENV PATH=/opt/openresty/bin:/opt/openresty/luajit/bin:/opt/openresty/nginx/sbin:/usr/local/julia/bin:/usr/local/dart-sdk/bin:$PATH
+
+RUN apt-get update \
+ && apt-get install -y \
+      apt-transport-https \
+      build-essential \
+      ca-certificates \
+      curl \
+      gettext-base \
+      git \
+      gnupg \
+      jq \
+      libhiredis-dev \
+      libjemalloc-dev \
+      libpcre3 \
+      libpcre3-dev \
+      libreadline-dev \
+      libsqlite3-dev \
+      libssl-dev \
+      lsb-release \
+      make \
+      net-tools \
+      openjdk-21-jdk \
+      perl \
+      software-properties-common \
+      sudo \
+      unzip \
+      wget \
+      zip \
+      zlib1g-dev \
+ && rm -rf /var/lib/apt/lists/*
+
+RUN wget -q https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein \
+ && chmod +x lein \
+ && mv lein /usr/local/bin/lein \
+ && lein version
+
+RUN case "${XTBENCH_LANG}" in \
+     dart) \
+       DART_VERSION=3.7.2; \
+       ARCH="$(uname -m)"; \
+       case "${ARCH}" in \
+         x86_64) DART_ARCH="x64" ;; \
+         aarch64) DART_ARCH="arm64" ;; \
+         *) echo "Unsupported architecture: ${ARCH}" >&2; exit 1 ;; \
+       esac; \
+       wget -q "https://storage.googleapis.com/dart-archive/channels/stable/release/${DART_VERSION}/sdk/dartsdk-linux-${DART_ARCH}-release.zip"; \
+       unzip -q "dartsdk-linux-${DART_ARCH}-release.zip" -d /usr/local/; \
+       rm "dartsdk-linux-${DART_ARCH}-release.zip"; \
+       ln -sf /usr/local/dart-sdk/bin/dart /usr/local/bin/dart; \
+       dart --version; \
+       ;; \
+     js) \
+       curl -fsSL https://deb.nodesource.com/setup_22.x | bash -; \
+       apt-get update; \
+       apt-get install -y nodejs; \
+       npm -g install ganache http-server pnpm yarn; \
+       npm -g install \
+         @react-native-async-storage/async-storage \
+         blessed@0.1.81 \
+         blessed-contrib@4.10.1 \
+         bresenham@0.0.4 \
+         chalk@4.1.2 \
+         crypto-js \
+         dateformat@5.0.2 \
+         drawille \
+         eventsource@1.1.0 \
+         fastify \
+         gl-matrix \
+         javascript-time-ago@2.3.10 \
+         node-fetch@2.6.6 \
+         node-localstorage@2.2.1 \
+         osc-js \
+         pg \
+         react@17.0.2 \
+         react-blessed@0.7.2 \
+         react-blessed-contrib \
+         redis \
+         sql.js \
+         tiny-worker \
+         ua-parser-js \
+         uuid@8.3.2 \
+         valtio \
+         window \
+         ws; \
+       rm -rf /var/lib/apt/lists/*; \
+       node --version; \
+       ;; \
+     julia) \
+       JULIA_VERSION=1.9.4; \
+       ARCH="$(uname -m)"; \
+       case "${ARCH}" in \
+         x86_64) JULIA_ARCH="x86_64" ;; \
+         aarch64) JULIA_ARCH="aarch64" ;; \
+         *) echo "Unsupported architecture: ${ARCH}" >&2; exit 1 ;; \
+       esac; \
+       wget -q "https://julialang-s3.julialang.org/bin/linux/${JULIA_ARCH/%x86_64/x64}/${JULIA_VERSION%.*}/julia-${JULIA_VERSION}-linux-${JULIA_ARCH}.tar.gz"; \
+       tar -xzf "julia-${JULIA_VERSION}-linux-${JULIA_ARCH}.tar.gz" -C /usr/local/; \
+       ln -sf "/usr/local/julia-${JULIA_VERSION}/bin/julia" /usr/local/bin/julia; \
+       ln -sfn "/usr/local/julia-${JULIA_VERSION}" /usr/local/julia; \
+       rm "julia-${JULIA_VERSION}-linux-${JULIA_ARCH}.tar.gz"; \
+       julia -e 'import Pkg; Pkg.add(["JSON"]); using JSON, Sockets'; \
+       ;; \
+     lua) \
+       OPENRESTY_VERSION=1.27.1.1; \
+       LUAROCKS_VERSION=3.12.2; \
+       NCHAN_VERSION=1.3.7; \
+       wget -q "https://openresty.org/download/openresty-${OPENRESTY_VERSION}.tar.gz"; \
+       tar -xf "openresty-${OPENRESTY_VERSION}.tar.gz"; \
+       wget -q "https://github.com/slact/nchan/archive/refs/tags/v${NCHAN_VERSION}.tar.gz"; \
+       tar -xf "v${NCHAN_VERSION}.tar.gz"; \
+       wget -q "https://luarocks.github.io/luarocks/releases/luarocks-${LUAROCKS_VERSION}.tar.gz"; \
+       tar -xf "luarocks-${LUAROCKS_VERSION}.tar.gz"; \
+       cd "openresty-${OPENRESTY_VERSION}" \
+         && ./configure --add-module="../nchan-${NCHAN_VERSION}" --with-pcre-jit --with-ipv6 --prefix=/opt/openresty \
+         && make -j"$(nproc)" \
+         && make install; \
+       cd "/tmp/luarocks-${LUAROCKS_VERSION}" \
+         && ./configure --prefix=/opt/openresty/luajit --with-lua=/opt/openresty/luajit --lua-suffix=jit --with-lua-include=/opt/openresty/luajit/include/luajit-2.1 \
+         && make \
+         && make install; \
+       /opt/openresty/luajit/bin/luarocks install luasocket; \
+       /opt/openresty/luajit/bin/luarocks install lustache; \
+       /opt/openresty/luajit/bin/luarocks install lua-cjson; \
+       /opt/openresty/luajit/bin/luarocks install lua-crypt; \
+       /opt/openresty/luajit/bin/luarocks install lua-resty-openssl; \
+       /opt/openresty/luajit/bin/luarocks install lua-resty-http; \
+       /opt/openresty/luajit/bin/luarocks install lua-resty-uuid; \
+       /opt/openresty/luajit/bin/luarocks install lua-resty-mail; \
+       curl -fsSLO https://luarocks.org/manifests/dougcurrie/lsqlite3-0.9.6-1.rockspec; \
+       /opt/openresty/luajit/bin/luarocks install lsqlite3-0.9.6-1.rockspec; \
+       /opt/openresty/luajit/bin/luarocks install multipart; \
+       /opt/openresty/luajit/bin/luarocks install pgmoon; \
+       /opt/openresty/luajit/bin/luarocks install luaposix; \
+       luajit -e "require('cjson'); require('socket'); print('lua-basic-ready')"; \
+       ;; \
+     r) \
+       apt-get update; \
+       apt-get install -y r-base; \
+       R -q -e "options(repos = c(CRAN = 'https://cran.r-project.org/')); install.packages('jsonlite')"; \
+       ln -sf /usr/bin/R /usr/local/bin/r; \
+       rm -rf /var/lib/apt/lists/*; \
+       R --version; \
+       ;; \
+     ruby) \
+       apt-get update; \
+       apt-get install -y ruby-full; \
+       rm -rf /var/lib/apt/lists/*; \
+       ruby --version; \
+       ;; \
+     *) \
+       echo "Unsupported XTBENCH_LANG: ${XTBENCH_LANG}" >&2; \
+       exit 1; \
+       ;; \
+   esac
+
+RUN wget -q https://raw.githubusercontent.com/zcaudate-xyz/foundation-base/master/project.clj \
+ && lein deps \
+ && rm project.clj

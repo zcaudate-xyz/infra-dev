@@ -1,4 +1,4 @@
-.PHONY: push build-dev-ci build-dev-main build-clean
+.PHONY: push build-dev-ci build-dev-main build-clean build-xtbench-ci
  
 push:                                                   
 	git add -A && git commit -m "code update" && git push                                                                       
@@ -11,3 +11,6 @@ build-dev-main: push
 	                                                      
 build-clean: push
 	gh workflow run build-clean.yml --repo zcaudate-xyz/infra-dev
+
+build-xtbench-ci: push
+	gh workflow run build-xtbench-ci.yml --repo zcaudate-xyz/infra-dev
