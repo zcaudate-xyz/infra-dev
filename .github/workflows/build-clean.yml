@@ -1,4 +1,4 @@
-name: Diagnose Xtbench Packages
+name: Probe Xtbench Visibility API
 
 on:
   push:
@@ -13,23 +13,43 @@ on:
   workflow_dispatch:
 
 jobs:
-  diagnose-xtbench-packages:
+  probe-xtbench-visibility:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
 
     steps:
-      - name: List org xtbench packages
+      - name: Get dart package metadata
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          gh api /orgs/zcaudate-xyz/packages?package_type=container --paginate \
-            | jq '[.[] | select(.name | contains("xtbench")) | {name, visibility, package_type, html_url}]'
+          gh api /orgs/zcaudate-xyz/packages/container/infra-foundation-xtbench-dart | jq '{name, visibility, package_type, url, html_url}'
 
-      - name: List user xtbench packages
+      - name: Probe visibility endpoint with GH secret token
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          gh api /user/packages?package_type=container --paginate \
-            | jq '[.[] | select(.name | contains("xtbench")) | {name, visibility, package_type, html_url}]'
+          code=$(curl -sS -o /tmp/gh-secret.out -w '%{http_code}' \
+            -X PATCH \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/orgs/zcaudate-xyz/packages/container/infra-foundation-xtbench-dart/visibility \
+            -d '{"visibility":"public"}')
+          echo "gh_secret_status=${code}"
+          cat /tmp/gh-secret.out
+
+      - name: Probe visibility endpoint with github token
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          code=$(curl -sS -o /tmp/github-token.out -w '%{http_code}' \
+            -X PATCH \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/orgs/zcaudate-xyz/packages/container/infra-foundation-xtbench-dart/visibility \
+            -d '{"visibility":"public"}')
+          echo "github_token_status=${code}"
+          cat /tmp/github-token.out
