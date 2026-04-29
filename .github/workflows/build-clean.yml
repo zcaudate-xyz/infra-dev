@@ -1,4 +1,4 @@
-name: Make Xtbench Packages Public
+name: Diagnose Xtbench Packages
 
 on:
   push:
@@ -13,23 +13,23 @@ on:
   workflow_dispatch:
 
 jobs:
-  make-xtbench-public:
+  diagnose-xtbench-packages:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
-    strategy:
-      fail-fast: false
-      matrix:
-        lang: [dart, js, julia, lua, r, ruby]
 
     steps:
-      - name: Make xtbench package public - ${{ matrix.lang }}
+      - name: List org xtbench packages
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: >
-          gh api
-          --method PATCH
-          -H "Accept: application/vnd.github+json"
-          /orgs/zcaudate-xyz/packages/container/infra-foundation-xtbench-${{ matrix.lang }}/visibility
-          -f visibility=public
+        run: |
+          gh api /orgs/zcaudate-xyz/packages?package_type=container --paginate \
+            | jq '[.[] | select(.name | contains("xtbench")) | {name, visibility, package_type, html_url}]'
+
+      - name: List user xtbench packages
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          gh api /user/packages?package_type=container --paginate \
+            | jq '[.[] | select(.name | contains("xtbench")) | {name, visibility, package_type, html_url}]'
