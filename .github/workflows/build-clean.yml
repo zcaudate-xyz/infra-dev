@@ -40,6 +40,20 @@ jobs:
           echo "gh_secret_status=${code}"
           cat /tmp/gh-secret.out
 
+      - name: Probe package root PATCH with GH secret token
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          code=$(curl -sS -o /tmp/gh-secret-root.out -w '%{http_code}' \
+            -X PATCH \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/orgs/zcaudate-xyz/packages/container/infra-foundation-xtbench-dart \
+            -d '{"visibility":"public"}')
+          echo "gh_secret_root_status=${code}"
+          cat /tmp/gh-secret-root.out
+
       - name: Probe visibility endpoint with github token
         env:
           GH_TOKEN: ${{ github.token }}
@@ -53,3 +67,17 @@ jobs:
             -d '{"visibility":"public"}')
           echo "github_token_status=${code}"
           cat /tmp/github-token.out
+
+      - name: Probe package root PATCH with github token
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          code=$(curl -sS -o /tmp/github-token-root.out -w '%{http_code}' \
+            -X PATCH \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/orgs/zcaudate-xyz/packages/container/infra-foundation-xtbench-dart \
+            -d '{"visibility":"public"}')
+          echo "github_token_root_status=${code}"
+          cat /tmp/github-token-root.out
