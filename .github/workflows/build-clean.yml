@@ -1,4 +1,4 @@
-name: Build Xtbench CI Images
+name: Make Xtbench Packages Public
 
 on:
   push:
@@ -13,43 +13,17 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-xtbench-ci:
+  make-xtbench-public:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
     strategy:
       fail-fast: false
-      max-parallel: 2
       matrix:
         lang: [dart, js, julia, lua, r, ruby]
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Setup Docker buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Log into registry
-        if: github.event_name != 'pull_request'
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ secrets.GH_USER }}
-          password: ${{ secrets.GH_TOKEN }}
-
-      - name: Build and push xtbench image - ${{ matrix.lang }}
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          file: ./infra/Dockerfile_foundation_xtbench_ci
-          build-args: |
-            XTBENCH_LANG=${{ matrix.lang }}
-          push: true
-          platforms: linux/amd64,linux/arm64
-          tags: ghcr.io/zcaudate-xyz/infra-foundation-xtbench-${{ matrix.lang }}:ci
-
       - name: Make xtbench package public - ${{ matrix.lang }}
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
