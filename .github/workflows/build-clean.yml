@@ -49,3 +49,13 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: ghcr.io/zcaudate-xyz/infra-foundation-xtbench-${{ matrix.lang }}:ci
+
+      - name: Make xtbench package public - ${{ matrix.lang }}
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: >
+          gh api
+          --method PATCH
+          -H "Accept: application/vnd.github+json"
+          /orgs/zcaudate-xyz/packages/container/infra-foundation-xtbench-${{ matrix.lang }}/visibility
+          -f visibility=public
