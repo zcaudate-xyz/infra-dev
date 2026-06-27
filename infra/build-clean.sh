@@ -32,6 +32,17 @@ echo "Installing Node..."
 curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
 apt-get update && apt-get install -y nodejs
 
+# Supabase CLI (required by xt db tests via scaffold.supabase.local-min)
+echo "Installing Supabase CLI..."
+ARCH=$(uname -m)
+case $ARCH in
+    x86_64) SBP_ARCH="linux_amd64" ;;
+    aarch64) SBP_ARCH="linux_arm64" ;;
+    *) echo "Unsupported architecture for Supabase CLI: $ARCH"; exit 1 ;;
+esac
+curl -fsSL "https://github.com/supabase/cli/releases/latest/download/supabase_${SBP_ARCH}.tar.gz" | tar -xzf - -C /usr/local/bin supabase
+chmod +x /usr/local/bin/supabase
+
 # Docker
 echo "Installing Docker..."
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor --yes -o /etc/apt/keyrings/docker.gpg
@@ -300,8 +311,8 @@ echo "Installing Mesa..."
 add-apt-repository -y ppa:kisak/kisak-mesa && apt-get update && apt-get -y upgrade
 
 # Chromium
-echo "Installing Chromium Driver..."
-add-apt-repository -y ppa:xtradeb/apps && apt-get update && apt-get install -y chromium-driver
+echo "Installing Chromium and ChromeDriver..."
+add-apt-repository -y ppa:xtradeb/apps && apt-get update && apt-get install -y chromium chromium-driver
 
 # Clojure
 echo "Installing Clojure deps..."

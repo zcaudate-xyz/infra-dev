@@ -20,6 +20,16 @@ RUN apt-get update \
 RUN curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash \
  && apt-get update && apt-get install nodejs -y
 
+# Supabase CLI (required by xt db tests via scaffold.supabase.local-min)
+RUN ARCH=$(uname -m) && \
+    case $ARCH in \
+        x86_64) SBP_ARCH="linux_amd64" ;; \
+        aarch64) SBP_ARCH="linux_arm64" ;; \
+        *) echo "Unsupported architecture: $ARCH"; exit 1 ;; \
+    esac && \
+    curl -fsSL "https://github.com/supabase/cli/releases/latest/download/supabase_${SBP_ARCH}.tar.gz" | tar -xzf - -C /usr/local/bin supabase && \
+    chmod +x /usr/local/bin/supabase
+
 # Docker
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg \
   && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null \
@@ -264,7 +274,7 @@ ENV PATH=$PATH:/opt/torch/install/bin/
 RUN add-apt-repository -y ppa:kisak/kisak-mesa && apt update && apt -y upgrade
 
 # Chromium
-RUN add-apt-repository -y ppa:xtradeb/apps && apt update && apt install -y chromium-driver
+RUN add-apt-repository -y ppa:xtradeb/apps && apt update && apt install -y chromium chromium-driver
 
 # Clojure
 RUN wget https://raw.githubusercontent.com/zcaudate-xyz/foundation-base/master/project.clj && lein deps && rm project.clj
