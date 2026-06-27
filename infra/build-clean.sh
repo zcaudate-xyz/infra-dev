@@ -40,8 +40,8 @@ case $ARCH in
     aarch64) SBP_ARCH="linux_arm64" ;;
     *) echo "Unsupported architecture for Supabase CLI: $ARCH"; exit 1 ;;
 esac
-curl -fsSL "https://github.com/supabase/cli/releases/latest/download/supabase_${SBP_ARCH}.tar.gz" | tar -xzf - -C /usr/local/bin supabase
-chmod +x /usr/local/bin/supabase
+curl -fsSL "https://github.com/supabase/cli/releases/latest/download/supabase_${SBP_ARCH}.tar.gz" | tar -xzf - -C /usr/local/bin
+chmod +x /usr/local/bin/supabase /usr/local/bin/supabase-go
 
 # Docker
 echo "Installing Docker..."
