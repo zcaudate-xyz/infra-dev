@@ -278,3 +278,10 @@ RUN add-apt-repository -y ppa:xtradeb/apps && apt update && apt install -y chrom
 
 # Clojure
 RUN wget https://raw.githubusercontent.com/zcaudate-xyz/foundation-base/master/project.clj && lein deps && rm project.clj
+
+# Ensure project-owned docker runtime images are available before running tests.
+# The entrypoint talks to the host docker daemon (mounted socket) and either
+# pulls pre-built images from GHCR or builds them from the mounted repo.
+ADD ./infra/entrypoint_clean.sh /usr/local/bin/entrypoint_clean.sh
+RUN chmod +x /usr/local/bin/entrypoint_clean.sh
+ENTRYPOINT ["/usr/local/bin/entrypoint_clean.sh"]
