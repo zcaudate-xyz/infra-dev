@@ -31,7 +31,7 @@ RUN ARCH=$(uname -m) && \
         *) echo "Unsupported architecture: $ARCH"; exit 1 ;; \
     esac && \
     curl -fsSL "https://github.com/supabase/cli/releases/download/v2.40.7/supabase_${SBP_ARCH}.tar.gz" | tar -xzf - -C /usr/local/bin && \
-    chmod +x /usr/local/bin/supabase /usr/local/bin/supabase-go
+    chmod +x /usr/local/bin/supabase
 
 # Docker
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg \
