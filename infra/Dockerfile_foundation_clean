@@ -10,6 +10,7 @@ RUN apt-get update \
        sudo \
        libreadline-dev zlib1g-dev libssl-dev libpcre3 libpcre3-dev \
        libhiredis-dev libsqlite3-dev libjemalloc-dev gettext-base \
+       uuid-dev \
        git gpg gnupg2 make cmake wget curl lsof unzip jq gcc tcc bc \
        x11vnc xvfb entr\
        openjdk-21-jdk openjfx default-jdk \
