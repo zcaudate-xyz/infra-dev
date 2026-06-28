@@ -33,8 +33,11 @@ curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
 apt-get update && apt-get install -y nodejs
 
 # Supabase CLI (required by xt db tests via scaffold.supabase.local-min)
+# Pinned to 2.40.7 because later CLI versions generate project-scoped
+# sb_publishable_/sb_secret_ keys locally, while the test suite still
+# expects legacy anon/service_role JWT keys.
 echo "Installing Supabase CLI..."
-npm install -g supabase
+npm install -g supabase@2.40.7
 
 # Docker
 echo "Installing Docker..."
