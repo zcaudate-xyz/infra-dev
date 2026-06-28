@@ -37,7 +37,14 @@ apt-get update && apt-get install -y nodejs
 # sb_publishable_/sb_secret_ keys locally, while the test suite still
 # expects legacy anon/service_role JWT keys.
 echo "Installing Supabase CLI..."
-npm install -g supabase@2.40.7
+ARCH=$(uname -m)
+case $ARCH in
+    x86_64) SBP_ARCH="linux_amd64" ;;
+    aarch64) SBP_ARCH="linux_arm64" ;;
+    *) echo "Unsupported architecture for Supabase CLI: $ARCH"; exit 1 ;;
+esac
+curl -fsSL "https://github.com/supabase/cli/releases/download/v2.40.7/supabase_2.40.7_${SBP_ARCH}.tar.gz" | tar -xzf - -C /usr/local/bin
+chmod +x /usr/local/bin/supabase /usr/local/bin/supabase-go
 
 # Docker
 echo "Installing Docker..."
