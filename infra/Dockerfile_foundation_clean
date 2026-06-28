@@ -280,7 +280,8 @@ ENV PATH=$PATH:/opt/torch/install/bin/
 RUN add-apt-repository -y ppa:kisak/kisak-mesa && apt update && apt -y upgrade
 
 # Chromium
-RUN add-apt-repository -y ppa:xtradeb/apps && apt update && apt install -y chromium chromium-driver
+RUN add-apt-repository -y ppa:xtradeb/apps && apt update && apt install -y chromium chromium-driver \
+  && ln -sf /usr/bin/chromium /usr/bin/chromium-browser
 
 # Clojure
 RUN wget https://raw.githubusercontent.com/zcaudate-xyz/foundation-base/master/project.clj && lein deps && rm project.clj

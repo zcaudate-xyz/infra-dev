@@ -320,6 +320,7 @@ add-apt-repository -y ppa:kisak/kisak-mesa && apt-get update && apt-get -y upgra
 # Chromium
 echo "Installing Chromium and ChromeDriver..."
 add-apt-repository -y ppa:xtradeb/apps && apt-get update && apt-get install -y chromium chromium-driver
+ln -sf /usr/bin/chromium /usr/bin/chromium-browser
 
 # Clojure
 echo "Installing Clojure deps..."
