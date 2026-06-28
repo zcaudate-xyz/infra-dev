@@ -190,21 +190,21 @@ ln -sf /usr/bin/python3 /usr/bin/python
 pip3 install websocket redis
 
 # Openresty/Nginx
+# Built from source without nchan because nchan 1.3.7 causes resty/luajit
+# to crash with "double free or corruption" on glibc 2.39 (Ubuntu 24.04).
 echo "Installing OpenResty/Nginx..."
 OPENRESTY_VERSION=1.27.1.1
 LUAROCKS_VERSION=3.12.2
-NCHAN_VERSION=1.3.7
 
 BUILD_DIR=$(mktemp -d)
 pushd $BUILD_DIR
 
 wget https://openresty.org/download/openresty-${OPENRESTY_VERSION}.tar.gz && tar -xf openresty-${OPENRESTY_VERSION}.tar.gz
-wget https://github.com/slact/nchan/archive/refs/tags/v${NCHAN_VERSION}.tar.gz && tar -xf v${NCHAN_VERSION}.tar.gz
 wget https://luarocks.github.io/luarocks/releases/luarocks-${LUAROCKS_VERSION}.tar.gz && tar -xf luarocks-${LUAROCKS_VERSION}.tar.gz
 
-cd openresty-${OPENRESTY_VERSION} && ./configure --add-module=../nchan-${NCHAN_VERSION} --with-pcre-jit \
+cd openresty-${OPENRESTY_VERSION} && ./configure --with-pcre-jit \
         --with-ipv6 --prefix=/opt/openresty \
-        && make && make install
+        && make -j"$(nproc)" && make install
 
 cd ../luarocks-${LUAROCKS_VERSION} && ./configure --prefix=/opt/openresty/luajit --with-lua=/opt/openresty/luajit \
         --lua-suffix=jit --with-lua-include=/opt/openresty/luajit/include/luajit-2.1 \
@@ -247,7 +247,11 @@ mv LuaJIT-${LUAJIT_VERSION}-redis redis-luajit-${REDIS_VERSION}-luajit/deps/LuaJ
 
 cd redis-luajit-${REDIS_VERSION}-luajit && make && make PREFIX=/opt/redis install
 cd deps/LuaJIT && make install
-mv /usr/local/bin/luajit-2.1.0-beta3 /usr/local/bin/luajit
+# Keep the redis LuaJIT binary under its original name and make the generic
+# `luajit` command point to the OpenResty LuaJIT so that luarocks packages
+# (lustache, lua-cjson, etc.) are found by default.
+rm -f /usr/local/bin/luajit
+ln -s /opt/openresty/luajit/bin/luajit /usr/local/bin/luajit
 
 popd
 export PATH=/opt/redis/bin:$PATH
@@ -334,7 +338,6 @@ export QUICKJS_VERSION=2024-01-13
 export PIP_BREAK_SYSTEM_PACKAGES=1
 export OPENRESTY_VERSION=1.27.1.1
 export LUAROCKS_VERSION=3.12.2
-export NCHAN_VERSION=1.3.7
 export PATH=/opt/openresty/bin:/opt/openresty/luajit/bin:/opt/openresty/nginx/sbin:\$PATH
 export REDIS_VERSION=6.2.1
 export LUAJIT_VERSION=2.1.2
