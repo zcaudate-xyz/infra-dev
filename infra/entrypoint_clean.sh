@@ -14,7 +14,7 @@
 set -e
 
 # Languages referenced by hara.runtime.basic.docker.registry/+registry+
-RT_BASIC_LANGS=(erlang js julia lua perl php python r ruby)
+RT_BASIC_LANGS=(erlang js julia lua perl php python r ruby blender gimp)
 
 # GHCR source prefix for cached rt-basic images
 RT_BASIC_SRC_PREFIX="ghcr.io/zcaudate-xyz/foundation-base/rt-basic"

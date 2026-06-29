@@ -281,8 +281,19 @@ ENV PATH=$PATH:/opt/torch/install/bin/
 RUN add-apt-repository -y ppa:kisak/kisak-mesa && apt update && apt -y upgrade
 
 # Chromium
-RUN add-apt-repository -y ppa:xtradeb/apps && apt update && apt install -y chromium chromium-driver \
-  && ln -sf /usr/bin/chromium /usr/bin/chromium-browser
+# The xtradeb/apps PPA is only tested on amd64. Install the .deb there and
+# skip on other architectures so the multi-platform clean image can still build.
+RUN ARCH=$(uname -m) && \
+    if [ "$ARCH" = "x86_64" ]; then \
+      wget https://launchpad.net/~xtradeb/+archive/ubuntu/apps/+files/xtradeb-apt-source_0.6_all.deb && \
+      apt-get install -y ./xtradeb-apt-source_0.6_all.deb && \
+      rm ./xtradeb-apt-source_0.6_all.deb && \
+      apt-get update && \
+      apt-get install -y chromium chromium-driver && \
+      ln -sf /usr/bin/chromium /usr/bin/chromium-browser; \
+    else \
+      echo "[infra] Skipping chromium install on ${ARCH} (xtradeb/apps is amd64-only tested)"; \
+    fi
 
 # Clojure
 RUN wget https://raw.githubusercontent.com/zcaudate-xyz/foundation-base/master/project.clj && lein deps && rm project.clj

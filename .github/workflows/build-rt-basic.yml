@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        lang: [erlang, js, julia, lua, perl, php, python, r, ruby]
+        lang: [erlang, js, julia, lua, perl, php, python, r, ruby, blender, gimp]
 
     steps:
       - name: Checkout foundation-base
