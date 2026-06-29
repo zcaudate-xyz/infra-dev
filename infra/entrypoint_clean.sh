@@ -27,6 +27,13 @@ ensure_rt_basic_image() {
   local dst="${RT_BASIC_DST_PREFIX}-${lang}:latest"
   local src="${RT_BASIC_SRC_PREFIX}-${lang}:latest"
 
+  # gimp is pinned to a specific tag because Ubuntu 24.04 and newer distro
+  # packages no longer ship the python-fu-eval batch interpreter. The pinned
+  # image is based on Debian buster which still provides gimp-python.
+  if [ "$lang" = "gimp" ]; then
+    src="${RT_BASIC_SRC_PREFIX}-${lang}:debian-buster-py2"
+  fi
+
   if docker image inspect "$dst" >/dev/null 2>&1; then
     echo "[rt-basic] ${lang}: local image already present"
     return 0
